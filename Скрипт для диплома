@@ -1,0 +1,2783 @@
+library(plm)
+library(mlbench)
+library(mnormt)
+library(skedastic)
+library(car)
+library(AER)
+library(Ecdat)
+library(ggplot2)
+library(FactoMineR)
+library(MASS)
+library(lmtest)
+library(factoextra)
+library(sandwich)
+library(dplyr)
+library(corrplot)
+library(corrplot)
+library(nnet)
+library(readxl)
+library(openxlsx)
+library(haven)
+library(tidyr)
+library(stargazer)
+
+library(fixest)
+library(MatchIt)
+library(Matching)
+library(AER)
+library(dplyr)
+library(psych)
+library(gt)
+cse <- function(model) {
+  A <- sqrt(diag(vcovHC(model)))
+  return(A)
+}
+library(tableone)
+
+####Данные без детей####
+data21<- read_sav("C:/Users/dirub/Downloads/r30iall_53.sav")
+data20 <- read_sav("C:/Users/dirub/Downloads/r29iall_42.sav")
+data19 <- read_sav("C:/Users/dirub/Downloads/r28iall_42.sav")
+data18 <- read_sav("C:/Users/dirub/Downloads/r27iall_54.sav")
+data17 <- read_sav("C:/Users/dirub/Downloads/r26iall_53.sav")
+data16 <- read_sav("C:/Users/dirub/Downloads/r25iall_52.sav")
+data15 <- read_sav("C:/Users/dirub/Downloads/r24iall_52.sav")
+data14 <- read_sav("C:/Users/dirub/Downloads/r23iall_52.sav")
+data13 <- read_sav("C:/Users/dirub/Downloads/r22iall_52.sav")
+data12 <- read_sav("C:/Users/dirub/Downloads/r21iall_51.sav")
+data11 <- read_sav("C:/Users/dirub/Downloads/r20iall_52.sav")
+data10 <- read_sav("C:/Users/dirub/Downloads/r19iall_51.sav")
+data9 <- read_sav("C:/Users/dirub/Downloads/r18iall_42.sav")
+data8 <- read_sav("C:/Users/dirub/Downloads/r17iall_42.sav")
+data7 <- read_sav("C:/Users/dirub/Downloads/r16iall_51.sav")
+data6 <- read_sav("C:/Users/dirub/Downloads/r15iall_51.sav")
+data5 <- read_sav("C:/Users/dirub/Downloads/r14iall_42.sav")
+data4 <- read_sav("C:/Users/dirub/Downloads/r13iall_51.sav")
+data3 <- read_sav("C:/Users/dirub/Downloads/r12iall_51.sav")
+data2 <- read_sav("C:/Users/dirub/Downloads/r11iall_51.sav")
+data1 <- read_sav("C:/Users/dirub/Downloads/r10iall_51.sav")
+
+ndata21 <- select(data21, idind,zj6.2, zj1, zj161.3y, zh5,z_diplom, status, zj13.2, z_marst, z_age, region)
+ndata21$year <- rep(2021,nrow(ndata21) )
+
+ndata20 <- select(data20, idind,yj6.2, yj1, yj161.3y, yh5,y_diplom, status, yj13.2, y_marst , y_age, region)
+ndata20$year <- rep(2020,nrow(ndata20))
+
+ndata19 <- select(data19, idind,xj6.2, xj1, xj161.3y, xh5,x_diplom, status, xj13.2, x_marst , x_age, region)
+ndata19$year <- rep(2019,nrow(ndata19))
+
+ndata18<- select(data18, idind,wj6.2, wj1, wj161.3y, wh5,w_diplom, status, wj13.2, w_marst , w_age, region)
+ndata18$year <- rep(2018,nrow(ndata18) )
+
+ndata17<- select(data17, idind,vj6.2, vj1, vj161.3y, vh5,v_diplom, status, vj13.2, v_marst , v_age, region)
+ndata17$year <- rep(2017,nrow(ndata17) )
+
+ndata16<- select(data16, idind,uj6.2, uj1, uj161.3y, uh5,u_diplom, status, uj13.2, u_marst, u_age, region )
+ndata16$year <- rep(2016,nrow(ndata16) )
+
+ndata15<- select(data15, idind,tj6.2, tj1, tj161.3y, th5,t_diplom, status, tj13.2, t_marst, t_age, region )
+ndata15$year <- rep(2015,nrow(ndata15) )
+
+ndata14<- select(data14, idind,sj6.2, sj1, sj161.3y, sh5,s_diplom, status, sj13.2, s_marst, s_age, region )
+ndata14$year <- rep(2014,nrow(ndata14) )
+
+ndata13<- select(data13, idind,rj6.2, rj1, rj161.3y, rh5,r_diplom, status, rj13.2, r_marst, r_age, region)
+ndata13$year <- rep(2013,nrow(ndata13) )
+
+ndata12<- select(data12, idind,qj6.2, qj1, qj161.1y, qj161.2y, qh5,q_diplom, status, qj13.2, q_marst, q_age, region )
+ndata12$stag <- ndata12$qj161.1y+ndata12$qj161.2y
+ndata12 <- select(ndata12, idind,qj6.2, qj1, stag, qh5,q_diplom, status, qj13.2, q_marst, q_age, region)
+ndata12$year <- rep(2012,nrow(ndata12) )
+
+ndata11<- select(data11, idind,pj6.2, pj1, pj161.1y , pj161.2y, ph5,p_diplom, status, pj13.2, p_marst, p_age, region )
+ndata11$stag <- ndata11$pj161.1y+ndata11$pj161.2y
+ndata11 <- select(ndata11, idind,pj6.2, pj1, stag, ph5,p_diplom, status, pj13.2, p_marst, p_age, region)
+ndata11$year <- rep(2011,nrow(ndata11) )
+
+ndata10<- select(data10, idind,oj6.2 , oj1, oj161.1y, oj161.2y, oh5,o_diplom, status, oj13.2, o_marst, o_age, region )
+ndata10$stag <- ndata10$oj161.1y+ndata10$oj161.2y
+ndata10 <- select(ndata10, idind,oj6.2 , oj1, stag, oh5,o_diplom, status, oj13.2, o_marst, o_age, region)
+ndata10$year <- rep(2010,nrow(ndata10) )
+
+ndata9<- select(data9, idind,nj6.2 , nj1,nj79a, nh5,n_diplom, status, nj13.2, n_marst , n_age, region)
+ndata9$year <- rep(2009,nrow(ndata9) )
+
+ndata8<- select(data8, idind,mj6.2 , mj1, mj161.1y,mj161.2y, mh5,m_diplom, status, mj13.2, m_marst, m_age, region )
+ndata8$stag <- ndata8$mj161.1y+ndata8$mj161.2y
+ndata8 <- select(ndata8,idind,mj6.2 , mj1, stag, mh5,m_diplom, status, mj13.2, m_marst, m_age, region)
+ndata8$year <- rep(2008,nrow(ndata8) )
+
+ndata7<- select(data7, idind,lj6.2 , lj1, lj161.1y, lj161.2y, lh5,l_diplom, status, lj13.2, l_marst, l_age, region )
+ndata7$stag <- ndata7$lj161.1y+ndata7$lj161.2y
+ndata7 <- select(ndata7,idind,lj6.2 , lj1, stag, lh5,l_diplom, status, lj13.2, l_marst, l_age, region ) 
+ndata7$year <- rep(2007,nrow(ndata7) )
+
+ndata6<- select(data6, idind,kj6.2 , kj1, kj79, kh5,k_diplom, status, kj13.2, k_marst, k_age, region )
+ndata6$year <- rep(2006,nrow(ndata6) )
+
+ndata5<- select(data5, idind,jj6.2 , jj1, jj161.1y , jj161.2y, jh5,j_diplom, status, jj13.2, j_marst , j_age, region)
+ndata5$stag <- ndata5$jj161.1y+ndata5$jj161.2y
+ndata5 <- select(ndata5, idind,jj6.2 , jj1, stag, jh5,j_diplom, status, jj13.2, j_marst, j_age, region )
+ndata5$year <- rep(2005,nrow(ndata5) )
+
+ndata4<- select(data4, idind,ij6.2 , ij1, ij161, ih5,i_diplom, status, ij13.2, i_marst, i_age, region )
+ndata4$year <- rep(2004,nrow(ndata4) )
+
+ndata3<- select(data3, idind,hj6.2 , hj1, hj79 , hh5,h_diplom, status, hj13.2, h_marst, h_age, region )
+ndata3$year <- rep(2003,nrow(ndata3) )
+
+ndata2<- select(data2, idind,gj6.2 , gj1, gj79 , gh5,g_diplom, status, gj13.2, g_marst, g_age, region )
+ndata2$year <- rep(2002,nrow(ndata2) )
+
+ndata1<- select(data1, idind,fj6.2 , fj1, fj79 , fh5,f_diplom, status, fj13.2, f_marst, f_age, region )
+ndata1$year <- rep(2001,nrow(ndata1) )
+
+names(ndata21) <- names(ndata20)
+names(ndata19) <- names(ndata20)
+names(ndata18) <- names(ndata20)
+names(ndata17) <- names(ndata20)
+names(ndata16) <- names(ndata20)
+names(ndata15) <- names(ndata20)
+names(ndata14) <- names(ndata20)
+names(ndata13) <- names(ndata20)
+names(ndata12) <- names(ndata20)
+names(ndata11) <- names(ndata20)
+names(ndata10) <- names(ndata20)
+names(ndata9) <- names(ndata20)
+names(ndata8) <- names(ndata20)
+names(ndata7) <- names(ndata20)
+names(ndata6) <- names(ndata20)
+names(ndata5) <- names(ndata20)
+names(ndata4) <- names(ndata20)
+names(ndata3) <- names(ndata20)
+names(ndata2) <- names(ndata20)
+names(ndata1) <- names(ndata20)
+
+####данные с детьми####
+
+
+ddata21 <- select(data21, idind,zj6.2, zj1, zj161.3y, zh5,z_diplom, status, zj13.2, z_marst, z_age, region,zj72.173, zj72.172,zj72.171 )
+ddata21$year <- rep(2021,nrow(ddata21) )
+
+ddata20 <- select(data20, idind,yj6.2, yj1, yj161.3y, yh5,y_diplom, status, yj13.2, y_marst , y_age, region, yj72.173, yj72.172,yj72.171 )
+ddata20$year <- rep(2020,nrow(ddata20))
+
+ddata19 <- select(data19, idind,xj6.2, xj1, xj161.3y, xh5,x_diplom, status, xj13.2, x_marst , x_age, region, xj72.173, xj72.172, xj72.171 )
+ddata19$year <- rep(2019,nrow(ddata19))
+
+ddata18<- select(data18, idind,wj6.2, wj1, wj161.3y, wh5,w_diplom, status, wj13.2, w_marst , w_age, region, wj72.173, wj72.172,wj72.171 )
+ddata18$year <- rep(2018,nrow(ddata18) )
+
+ddata17<- select(data17, idind,vj6.2, vj1, vj161.3y, vh5,v_diplom, status, vj13.2, v_marst , v_age, region, vj72.173, vj72.172,vj72.171 )
+ddata17$year <- rep(2017,nrow(ddata17) )
+
+ddata16<- select(data16, idind,uj6.2, uj1, uj161.3y, uh5,u_diplom, status, uj13.2, u_marst, u_age, region , uj72.173, uj72.172, uj72.171 )
+ddata16$year <- rep(2016,nrow(ddata16) )
+
+ddata15<- select(data15, idind,tj6.2, tj1, tj161.3y, th5,t_diplom, status, tj13.2, t_marst, t_age, region, tj72.173, tj72.172,tj72.171  )
+ddata15$year <- rep(2015,nrow(ddata15) )
+
+ddata14<- select(data14, idind,sj6.2, sj1, sj161.3y, sh5,s_diplom, status, sj13.2, s_marst, s_age, region, sj72.173, sj72.172,sj72.171  )
+ddata14$year <- rep(2014,nrow(ddata14) )
+
+ddata13<- select(data13, idind,rj6.2, rj1, rj161.3y, rh5,r_diplom, status, rj13.2, r_marst, r_age, region, rj72.173, rj72.172, rj72.171 )
+ddata13$year <- rep(2013,nrow(ddata13) )
+
+ddata12<- select(data12, idind,qj6.2, qj1, qj161.1y, qj161.2y, qh5,q_diplom, status, qj13.2, q_marst, q_age, region, qj72.173 , qj72.172, qj72.171 )
+ddata12$stag <- ddata12$qj161.1y+ddata12$qj161.2y
+ddata12 <- select(ddata12, idind,qj6.2, qj1, stag, qh5,q_diplom, status, qj13.2, q_marst, q_age, region, qj72.173, qj72.172,qj72.171 )
+ddata12$year <- rep(2012,nrow(ddata12) )
+
+ddata11<- select(data11, idind,pj6.2, pj1, pj161.1y , pj161.2y, ph5,p_diplom, status, pj13.2, p_marst, p_age, region, pj72.173, pj72.172,pj72.171  )
+ddata11$stag <- ddata11$pj161.1y+ddata11$pj161.2y
+ddata11 <- select(ddata11, idind,pj6.2, pj1, stag, ph5,p_diplom, status, pj13.2, p_marst, p_age, region, pj72.173, pj72.172,pj72.171 )
+ddata11$year <- rep(2011,nrow(ddata11) )
+
+ddata10<- select(data10, idind,oj6.2 , oj1, oj161.1y, oj161.2y, oh5,o_diplom, status, oj13.2, o_marst, o_age, region, oj72.173, oj72.172,oj72.171  )
+ddata10$stag <- ddata10$oj161.1y+ddata10$oj161.2y
+ddata10 <- select(ddata10, idind,oj6.2 , oj1, stag, oh5,o_diplom, status, oj13.2, o_marst, o_age, region, oj72.173, oj72.172,oj72.171 )
+ddata10$year <- rep(2010,nrow(ddata10) )
+
+ddata9<- select(data9, idind,nj6.2 , nj1,nj79a, nh5,n_diplom, status, nj13.2, n_marst , n_age, region, nj72.173, nj72.172,nj72.171 )
+ddata9$year <- rep(2009,nrow(ddata9) )
+
+ddata8<- select(data8, idind,mj6.2 , mj1, mj161.1y,mj161.2y, mh5,m_diplom, status, mj13.2, m_marst, m_age, region, mj72.173, mj72.172,mj72.171  )
+ddata8$stag <- ddata8$mj161.1y+ddata8$mj161.2y
+ddata8 <- select(ddata8,idind,mj6.2 , mj1, stag, mh5,m_diplom, status, mj13.2, m_marst, m_age, region, mj72.173, mj72.172,mj72.171 )
+ddata8$year <- rep(2008,nrow(ddata8) )
+
+ddata7<- select(data7, idind,lj6.2 , lj1, lj161.1y, lj161.2y, lh5,l_diplom, status, lj13.2, l_marst, l_age, region, lj72.173, lj72.172,lj72.171  )
+ddata7$stag <- ddata7$lj161.1y+ddata7$lj161.2y
+ddata7 <- select(ddata7,idind,lj6.2 , lj1, stag, lh5,l_diplom, status, lj13.2, l_marst, l_age, region, lj72.173 , lj72.172,lj72.171 ) 
+ddata7$year <- rep(2007,nrow(ddata7) )
+
+ddata6<- select(data6, idind,kj6.2 , kj1, kj79, kh5,k_diplom, status, kj13.2, k_marst, k_age, region, kj72.173, kj72.172,kj72.171  )
+ddata6$year <- rep(2006,nrow(ddata6) )
+
+ddata5<- select(data5, idind,jj6.2 , jj1, jj161.1y , jj161.2y, jh5,j_diplom, status, jj13.2, j_marst , j_age, region, jj72.173, jj72.172,jj72.171 )
+ddata5$stag <- ddata5$jj161.1y+ddata5$jj161.2y
+ddata5 <- select(ddata5, idind,jj6.2 , jj1, stag, jh5,j_diplom, status, jj13.2, j_marst, j_age, region, jj72.173 , jj72.172,jj72.171 )
+ddata5$year <- rep(2005,nrow(ddata5) )
+
+ddata4<- select(data4, idind,ij6.2 , ij1, ij161, ih5,i_diplom, status, ij13.2, i_marst, i_age, region, ij72.173 , ij72.172,ij72.171  )
+ddata4$year <- rep(2004,nrow(ddata4) )
+
+
+
+names(ddata21) <- names(ddata20)
+names(ddata19) <- names(ddata20)
+names(ddata18) <- names(ddata20)
+names(ddata17) <- names(ddata20)
+names(ddata16) <- names(ddata20)
+names(ddata15) <- names(ddata20)
+names(ddata14) <- names(ddata20)
+names(ddata13) <- names(ddata20)
+names(ddata12) <- names(ddata20)
+names(ddata11) <- names(ddata20)
+names(ddata10) <- names(ddata20)
+names(ddata9) <- names(ddata20)
+names(ddata8) <- names(ddata20)
+names(ddata7) <- names(ddata20)
+names(ddata6) <- names(ddata20)
+names(ddata5) <- names(ddata20)
+names(ddata4) <- names(ddata20)
+
+
+
+
+####описательнsе статистики####
+data_all <- bind_rows(ddata4, ddata5, ddata6, ddata7, ddata8, ddata9, ddata10, ddata11, ddata12, ddata13, ddata14, ddata15, ddata16, ddata17, ddata18, ddata19, ddata20, ddata21)
+
+
+data_cpi <- read_excel("C:/Users/dirub/Downloads/defl.xlsx", sheet="cpi2")
+data_cpi <- gather(data_cpi,"key", "value", -region)
+names(data_cpi) <- c("region", "year", "cpi")
+data_cpi$year <- as.numeric(data_cpi$year)
+data_all <- left_join(data_all, data_cpi, by=c("region","year"))
+
+data_lmin <- read_excel("C:/Users/dirub/Downloads/defl.xlsx", sheet="lmin")
+data_all <- left_join(data_all, data_lmin, by='region')
+
+data_all <- subset(data_all, yj1==1|yj1==2|yj1==3|yj1==5)
+
+
+data_all$working <- ifelse (as.numeric(data_all$yj1)==1|as.numeric(data_all$yj1)==3,1, ifelse (as.numeric(data_all$yj1)==2|as.numeric(data_all$yj1)==4|as.numeric(data_all$yj1)==5, 0,data_all$yj1))
+data_all$dekret <- ifelse(as.numeric(data_all$yj1)==2, 1, 0)
+data_all$exp <- as.numeric(data_all$yj161.3y)
+data_all$male <- ifelse(data_all$yh5==1,1,0)
+data_all1 <- as.data.frame(class.ind(data_all$status))
+
+names(data_all1) <- c('oc', 'city', 'pgt', 'rural')
+data_all <- cbind(data_all,data_all1)
+educ <- ifelse(data_all$y_diplom<4, 1, ifelse(data_all$y_diplom==5|data_all$y_diplom==4, 2,ifelse(data_all$y_diplom==6, 3,data_all$y_diplom)))
+data_all2 <-  as.data.frame(class.ind(educ))
+names(data_all2) <- c('educ1', 'educ2', 'educ3', 'n1','n2', 'n3')
+data_all <- cbind(data_all,data_all2)
+data_all$hours <- ifelse(data_all$working==1, data_all$yj6.2, 0)
+data_all$money <- ifelse(data_all$working==1|data_all$dekret==1,data_all$yj13.2 , 0 )
+data_all$money1 <- data_all$money*data_all$cpi*data_all$lmin_def
+
+
+data_all3 <-  as.data.frame(class.ind(data_all$y_marst))
+names(data_all3) <- c('single', 'married', 'living', 'divorced', 'widowed', 'separated', 'none1', 'none2', 'none3')
+data_all <- cbind(data_all,data_all3)
+data_all <- subset(data_all,none1==0&none2==0&none3==0&n1==0&n2==0&n3==0)
+#children
+data_all <- select(data_all, -none1, -none2, -none3, -n1, -n2, -n3)
+data_all$child <- data_all$yj72.171
+data_all$children <- data_all$yj72.172
+data_all$children18 <- data_all$yj72.173
+
+
+data_all$kids <- ifelse(data_all$child==2, 0, data_all$children)
+data_all <- subset(data_all, kids<30)
+data_all <- data_all[ ! (is.na(data_all$kids)), ]
+data_all <- data_all[ ! (is.na(data_all$child)), ]
+data_all <- select(data_all, - child, -children, -children18)
+
+
+data_all <- data_all[ ! (is.na(data_all$yj161.3y  )), ]
+data_all <- data_all[ ! (is.na(data_all$yj1  )), ] 
+data_all <- data_all[ ! (is.na(data_all$money1  )), ]
+data_all <- data_all[ ! (is.na(data_all$y_marst  )), ]
+data_all <- subset(data_all,hours<99999997& yj1<99999997 & yj161.3y<100 & yh5<99999997 &y_diplom<99999997 & status<99999997 & money1<99999997 & y_marst<99999997&y_age<60 &y_age>15)
+data_all <- data_all[,-c(2:9, 11:14)]
+
+data_all <- select(data_all,  -idind, -money)
+data_all <- select(data_all,  -lmin_def,- cpi )
+boxplot(data_all$money1, color="red")
+boxplot(data_all$hours, color="red")
+
+datkkka <- subset(data_all, money1>0 )
+quantile(datkkka$money1, 0.995)
+
+
+data_all <- subset(data_all,hours<80)
+data_all <- subset(data_all,money1<160000)
+data_all$beginwork <- data_all$y_age-data_all$exp
+data_all <- subset(data_all,beginwork>15)
+data_all <- select(data_all,-beginwork)
+quantile (data_all$kids, 0.99)
+data_all <- subset(data_all, kids<5)
+
+
+correlation_matrix <- round(cor(data_all),1)
+corrplot(correlation_matrix, tl.col = "black")
+
+
+stargazer(data_all, type="text", out="summary.html")
+
+data_all$malenames <- ifelse(data_all$male==1, "Мужчины", "Женщины")
+ggplot(data_all, aes(x=money1, fill= as.factor(malenames)), colour=malenames) +
+  geom_density( alpha=0.4)+ylab("Доля")+xlab("Среднемесячная з/п")+
+  theme(legend.title = element_blank())
+
+data_all$logmoney <- log(data_all$money1+1)
+data_all <- subset(data_all, logmoney>0)
+ggplot(data_all, aes(x=logmoney, fill= as.factor(malenames)), colour=malenames) +
+  geom_density( alpha=0.4)+ylab("Доля")+xlab("log(cреднемесячная з/п)")+
+  theme(legend.title = element_blank())
+#убираю декретных и 0
+data_all <- data_all %>% subset(money1>0 & dekret==0)
+stargazer(data_all, type="text")
+# распределение зп по годам
+datag <- data_all %>% select(year, logmoney)
+ggplot(datag, aes(x=logmoney, fill= as.factor(year)), colour=year) +
+  geom_density( alpha=0.1)+ylab("Доля")+xlab("log(Среднемесячная з/п)")+
+  theme(legend.title = element_blank())
+c <- select(data_all, idind) %>% count(idind)
+
+quantile(data_all$money1, 0.247)
+quantile(data_all$working, 0.2632)
+
+data_all_money0 <- subset(data_all, money1>0)
+ggplot(data_all_money0, aes(x=money1, fill= as.factor(malenames)), colour=malenames) +
+  geom_density( alpha=0.4)+ylab("Доля")+xlab("Среднемесячная з/п")+
+  theme(legend.title = element_blank())
+
+####Описательные статистики 2021####
+data_cpi <- read_excel("C:/Users/dirub/Downloads/defl.xlsx", sheet="cpi2")
+data_cpi <- gather(data_cpi,"key", "value", -region)
+names(data_cpi) <- c("region", "year", "cpi")
+data_cpi$year <- as.numeric(data_cpi$year)
+data_all <- left_join(ddata21, data_cpi, by=c("region","year"))
+
+data_lmin <- read_excel("C:/Users/dirub/Downloads/defl.xlsx", sheet="lmin")
+data_all <- left_join(data_all, data_lmin, by='region')
+
+data_all <- subset(data_all, yj1==1|yj1==2|yj1==3|yj1==5)
+
+data_all$working <- ifelse (as.numeric(data_all$yj1)==1|as.numeric(data_all$yj1)==3,1, ifelse (as.numeric(data_all$yj1)==2|as.numeric(data_all$yj1)==4|as.numeric(data_all$yj1)==5, 0,data_all$yj1))
+data_all$dekret <- ifelse (as.numeric(data_all$yj1)==2,1,0)
+data_all$exp <- as.numeric(data_all$yj161.3y)
+data_all$male <- ifelse(data_all$yh5==1,1,0)
+data_all1 <- as.data.frame(class.ind(data_all$status))
+
+names(data_all1) <- c('oc', 'city', 'pgt', 'rural')
+data_all <- cbind(data_all,data_all1)
+educ <- ifelse(data_all$y_diplom<4, 1, ifelse(data_all$y_diplom==5|data_all$y_diplom==4, 2,ifelse(data_all$y_diplom==6, 3,data_all$y_diplom)))
+data_all2 <-  as.data.frame(class.ind(educ))
+names(data_all2) <- c('educ1', 'educ2', 'educ3', 'n1')
+data_all <- cbind(data_all,data_all2)
+data_all$hours <- ifelse(data_all$working==1, data_all$yj6.2, 0)
+data_all$money <- ifelse(data_all$working==1|data_all$dekret==1,data_all$yj13.2 , 0 )
+data_all$money1 <- data_all$money*data_all$lmin_def*data_all$cpi
+
+
+data_all3 <-  as.data.frame(class.ind(data_all$y_marst))
+names(data_all3) <- c('single', 'married', 'living', 'divorced', 'widowed', 'separated', 'none1', 'none2', 'none3')
+data_all <- cbind(data_all,data_all3)
+data_all <- subset(data_all,none1==0&none2==0&none3==0&n1==0)
+
+data_all <- select(data_all, -none1, -none2, -none3, -n1)
+
+
+data_all <- data_all[ ! (is.na(data_all$yj161.3y  )), ]
+data_all <- data_all[ ! (is.na(data_all$yj1  )), ] 
+data_all <- data_all[ ! (is.na(data_all$money1  )), ] 
+data_all <- data_all[ ! (is.na(data_all$y_marst  )), ]
+data_all <- subset(data_all,hours<99990 & yj1<99999997 & yj161.3y<100 & yh5<99999997 &y_diplom<99999997 & status<99999997 & money1<99999997 & y_marst<99999997&y_age<60 &y_age>15)
+data_all$marstatus <- data_all$y_marst
+data_all <- data_all[,-c(2:9)]
+data_all <- select(data_all, -lmin_def, -region, -idind, -money)
+data_all <- select(data_all, -year, -cpi)
+
+
+# data_alli <- data_all
+# data_alli$money1 <-data_alli$money1/data_alli$cpi2021
+# ddd <- subset(data_alli, money1>0&money1<160000 )
+# a <- c(quantile(ddd$money1, 0.1), quantile(ddd$money1, 0.2), quantile(ddd$money1, 0.3), quantile(ddd$money1, 0.4), quantile(ddd$money1, 0.5), quantile(ddd$money1, 0.6)
+#        , quantile(ddd$money1, 0.7), quantile(ddd$money1, 0.8), quantile(ddd$money1, 0.9), quantile(ddd$money1, 1))
+# me <- data.frame(a)
+# b <- c(14016,20806, 26197, 31462, 37064, 43724, 52149,63931,84117, 189338  )
+# rosstat <- data_frame(b)
+# me$me <- rep("Данные", nrow(me))
+# rosstat$me <- rep("Росстат", nrow(rosstat))
+# names(rosstat) <- c("a", "me")
+# datkka <- rbind(rosstat, me)
+# datkka$groups <- c(1:10, 1:10)
+# 
+# ggplot(datkka, aes(x=groups, y= a, colour=as.factor(me))) +
+#     geom_line( )+ylab("З/п")+ scale_x_continuous(name = "Децильная группа", limits = c(1, 10), breaks = c(seq(1, 10, 1)))+
+#   theme(legend.title = element_blank())
+
+ggplot(data_all, aes(hours)) +
+  geom_histogram(binwidth = 2, color = "black", fill = "white", breaks=c(0,10,20,30,40,50,60,70,80,90,100,150)) +
+  ylab("Количество респондентов")+xlab("Часов работы в неделю")
+
+quantile(data_all$money1, 0.99)
+hist(data_all$money1[data_all$working==1], breaks=c(0,20000, 40000, 60000, 80000, 100000, 120000, 140000,  160000,180000, 200000, 220000,240000,   500000))
+axis(2, tick = TRUE, labels = FALSE)
+boxplot(data_all$money1[data_all$working==1])
+quantile(data_all$hours, 0.99)
+data_all <- subset(data_all,hours<80)
+data_all <- subset(data_all,money1<160000  )
+data_all$beginwork <- data_all$y_age-data_all$exp
+data_all <- subset(data_all,beginwork>15)
+data_all <- select(data_all,-beginwork)
+#children
+data_all$child <- data_all$yj72.171
+data_all$children <- data_all$yj72.172
+data_all$children18 <- data_all$yj72.173
+
+
+data_all$kids <- ifelse(data_all$child==2, 0, data_all$children)
+data_all <- subset(data_all, kids<30)
+data_all <- data_all[ ! (is.na(data_all$kids)), ]
+data_all <- data_all[ ! (is.na(data_all$child)), ]
+data_all <- select(data_all, -yj72.173, -yj72.172, -yj72.171, -child, -children, -children18)
+
+quantile (data_all$kids, 0.99)
+hist(data_all$kids)
+data_all <- subset(data_all, kids<5)
+data_all
+stargazer(data_all, type='text', out="data2021.html")
+df1 <- data_all %>% group_by(male,y_age) %>% summarise(s_age = sum(y_age))
+
+#половозрастная структура
+ggplot(data = df1, aes(x = y_age,y=s_age, fill = male)) + 
+  geom_bar(data = filter(df1, male == 0), stat = "identity" ) + 
+  geom_bar(data = filter(df1, male == 1), stat="identity", aes(y=-s_age) ) + 
+  coord_flip()+ylab("количество людей")+xlab("возраст")
+
+
+ddd <- subset(data_all, money1>0)
+mean(ddd$money1)
+
+quantile(ddd$money1, 0.3)
+#график семейных статусов
+data_all$marstatus<- ifelse(data_all$marstatus==1, "никогда не были в браке",ifelse(data_all$marstatus==2, "в браке", ifelse(data_all$marstatus==3, "сожительствуют", ifelse(data_all$marstatus==4, "разведены", ifelse(data_all$marstatus==5, "овдовели", "в браке, но живут отдельно")))) )
+
+#сколько мужчин и женщин в каждой групппе семейного статуса
+data_all$malenames <- ifelse(data_all$male==1, "Мужчины", "Женщины")
+ggplot(data_all, aes(x=marstatus, fill= as.factor(malenames)), colour=malenames) +
+  geom_bar(position="dodge")+ylab("Количество респондентов")+xlab("Семейное положение")+
+  theme(legend.title = element_blank())
+####2001-2021 эффект брака####
+
+data_all <- bind_rows(ndata1, ndata2, ndata3, ndata4, ndata5, ndata6, ndata7, ndata8, ndata9, ndata10, ndata11, ndata12, ndata13, ndata14, ndata15, ndata16, ndata17, ndata18, ndata19, ndata20, ndata21)
+
+data_cpi <- read_excel("C:/Users/dirub/Downloads/defl.xlsx", sheet="cpi2")
+data_cpi <- gather(data_cpi,"key", "value", -region)
+names(data_cpi) <- c("region", "year", "cpi")
+data_cpi$year <- as.numeric(data_cpi$year)
+data_all <- left_join(data_all, data_cpi, by=c("region","year"))
+
+data_lmin <- read_excel("C:/Users/dirub/Downloads/defl.xlsx", sheet="lmin")
+data_all <- left_join(data_all, data_lmin, by='region')
+
+data_all <- subset(data_all, yj1==1|yj1==2|yj1==3|yj1==5)
+
+
+data_all$working <- ifelse (as.numeric(data_all$yj1)==1|as.numeric(data_all$yj1)==3,1, ifelse (as.numeric(data_all$yj1)==2|as.numeric(data_all$yj1)==4|as.numeric(data_all$yj1)==5, 0,data_all$yj1))
+data_all$dekret <- ifelse(as.numeric(data_all$yj1==2), 1,0)
+data_all$exp <- as.numeric(data_all$yj161.3y)
+data_all$male <- ifelse(data_all$yh5==1,1,0)
+data_all1 <- as.data.frame(class.ind(data_all$status))
+
+names(data_all1) <- c('oc', 'city', 'pgt', 'rural')
+data_all <- cbind(data_all,data_all1)
+educ <- ifelse(data_all$y_diplom<4, 1, ifelse(data_all$y_diplom==5|data_all$y_diplom==4, 2,ifelse(data_all$y_diplom==6, 3,data_all$y_diplom)))
+data_all2 <-  as.data.frame(class.ind(educ))
+names(data_all2) <- c('educ1', 'educ2', 'educ3', 'n1','n2', 'n3')
+data_all <- cbind(data_all,data_all2)
+data_all$hours <- ifelse(data_all$working==1, data_all$yj6.2, 0)
+data_all$money <- ifelse(data_all$working==1,data_all$yj13.2 , 0 )
+data_all$money1 <- data_all$money*data_all$cpi*data_all$lmin_def
+
+
+data_all3 <-  as.data.frame(class.ind(data_all$y_marst))
+names(data_all3) <- c('single', 'married', 'living', 'divorced', 'widowed', 'separated', 'none1', 'none2', 'none3')
+data_all <- cbind(data_all,data_all3)
+data_all <- subset(data_all,none1==0&none2==0&none3==0&n1==0&n2==0&n3==0)
+
+data_all <- select(data_all, -none1, -none2, -none3, -n1, -n2, -n3)
+
+#без контроля на з/п в прошом 
+# data_all1 <- pdata.frame(data_all,
+#                          index = c("idind", "year"),
+#                          row.names = TRUE)
+# data_all1$lsingle <- stats::lag(data_all1$single)
+# 
+# #а теперь ограничим
+# data_all11 <- data_all1[ ! (is.na(data_all1$yj161.3y  )), ]
+# data_all1 <- data_all1[ ! (is.na(data_all1$yj1  )), ]
+# data_all1 <- data_all1[ ! (is.na(data_all1$money1  )), ]
+# data_all1 <- data_all1[ ! (is.na(data_all1$y_marst  )), ]
+# data_all1 <- subset(data_all1,hours<80 & yj1<99999997 & yj161.3y<100 & yh5<99999997 &y_diplom<99999997 & status<99999997 & money1<99999997 & y_marst<99999997&y_age<60 &y_age>15)
+# data_all1 <- data_all1[,-c(2:9)]
+# data_all1 <- select(data_all1, -cpi, -lmin_def, -region, -idind, -money)
+# 
+# data_all1 <- subset(data_all1,hours<80)
+# data_all1 <- subset(data_all1,money1<160000  )
+# # data_all1 <- select(data_all1,  -year )
+# data_all1$beginwork <- data_all1$y_age-data_all1$exp
+# subset(data_all1,beginwork>15)
+# data_all1 <- subset(data_all1, money1>0)
+# data_all1 <- select(data_all1,-beginwork)
+# 
+# data_all1 <- subset(data_all1, single==1|married==1)
+# data_all1 <- subset(data_all1, lsingle==1)
+# data_all1 <- select(data_all1, - single, -lsingle, -widowed, -separated, -living, -divorced)
+# 
+# 
+# #модель
+# data_all_male <- subset(data_all1, male==1)
+# data_all_male <- select(data_all_male, -male)
+# hist(data_all_male$money1)
+# data_all_male <- subset(data_all_male, money1>0)
+# # Теперь модель
+# m_out <- matchit(married ~ .-money1, data = data_all_male,exact="year",
+#                  method = "nearest",
+#                  distance = "glm", ratio = 4, replace = FALSE)
+# summary(m_out)
+# plot(summary(m_out))
+# m_data <- match.data(m_out)
+# m_ate <- lm(money1 ~ married, data = m_data, weights = m_data$weights)
+# summary(m_ate)
+
+
+##контроль на зп до брака
+datak <- pdata.frame(data_all,
+                     index = c("idind", "year"),
+                     row.names = TRUE)
+datak$lsingle <- stats::lag(datak$single)
+datak$lmoney <- stats::lag(datak$money1)
+
+
+datak <- datak[ ! (is.na(datak$yj161.3y  )), ]
+datak <- datak[ ! (is.na(datak$yj1  )), ] 
+datak <- datak[ ! (is.na(datak$money1  )), ]
+datak <- datak[ ! (is.na(datak$y_marst  )), ]
+datak <- subset(datak,hours<80 & yj1<99999997 & yj161.3y<100 & yh5<99999997 &y_diplom<99999997 & status<99999997 & money1<99999997 & y_marst<99999997&y_age<60 &y_age>15&money<999999&lmoney<999999)
+datak <- datak[,-c(2:9)]
+datak <- select(datak, -cpi, -lmin_def, -region, -idind, -money)
+
+
+datak <- subset(datak,hours<80)
+datak <- subset(datak,money1<160000  &lmoney<160000)
+# datak <- select(datak,  -year )
+datak$beginwork <- datak$y_age-datak$exp
+subset(datak,beginwork>15)
+datak <- select(datak,-beginwork)
+
+
+datak <- subset(datak, single==1|married==1)
+datak <- subset(datak, lsingle==1)
+datak <- datak[ ! (is.na(datak$lmoney  )), ]
+datak <- select(datak, - single, -lsingle, -widowed, -separated, -living, -divorced)
+
+data_all_male <- subset(datak, male==1)
+data_all_male <- select(data_all_male, -male)
+data_all_male <- data_all_male %>% subset(money1>0&lmoney>0)
+
+
+a <- data_all_male$lmoney
+lmon <- data.frame(a)
+b <- data_all_male$money1
+mon <- data_frame(b)
+lmon$lag <- rep(1, nrow(lmon))
+mon$lag <- rep(0, nrow(mon))
+names(mon) <- c("a", "lag")
+datjka <- rbind(mon, lmon)
+
+ggplot(datjka, aes(x=a, fill= as.factor(lag)), colour=lag) +
+  geom_density( alpha=0.4)+ylab("Доля")+xlab("Среднемесячная з/п")+
+  theme(legend.title = element_blank())
+#графики очень похожи
+
+m_out <- matchit(married ~ .-money1, data = data_all_male,exact="year",
+                 method = "nearest",
+                 distance = "glm", ratio = 7, replace = FALSE)
+summary(m_out)
+plot(summary(m_out))
+m_data <- match.data(m_out)
+m_ate <- lm(money1 ~ married, data = m_data, weights = m_data$weights)
+summary(m_ate)
+
+m_data <- cbind(m_data$y_age, m_data$exp, m_data$oc, m_data$city, m_data$pgt, m_data$rural, m_data$educ1, m_data$educ2, m_data$educ3,  m_data$hours,   m_data$married,  m_data$lmoney)
+names(m_data) <- c("age", "exp", "oc", "city", "pgt", "rural", "educ1", "educ2", "educ3", "hours", "married", "lmoney")
+m_data <- m_data  %>% as.data.frame()
+
+datasummary_balance(~married, m_data,stars = TRUE, dinm_statistic = "p.value", output = "gt") 
+tt<- subset(m_data,married==1)
+cc <- subset(m_data,married==0)
+wilcox.test(tt$money1, cc$money1, alternative = "greater")
+#расстояние махаланобис
+m_out <- matchit(married ~ .-money1, data = data_all_male,exact="year",
+                 method = "nearest",
+                 distance = "mahalanobis", ratio = 7, replace = FALSE) 
+summary(m_out)
+plot(summary(m_out))
+m_data <- match.data(m_out)
+m_ate <- lm(money1 ~ married, data = m_data, weights = m_data$weights)
+summary(m_ate)
+
+stargazer(m_ate, type="text", out="mahal.html")
+
+
+m_out1 <- matchit(married ~ .-money1, data = data_all_male,exact="year",
+                  method = "nearest",
+                  distance = "mahalanobis", ratio = 2, replace = FALSE) 
+summary(m_out1)
+plot(summary(m_out1))
+m_data1 <- match.data(m_out1)
+m_ate1 <- lm(money1 ~ married, data = m_data1, weights = m_data1$weights)
+summary(m_ate1)
+k <- m_data %>% as.data.frame() %>% select(-year,-subclass)
+MatchBalance(married~.,data=k)
+m_ate1 <- lm(hours ~ married, data = m_data1, weights = m_data1$weights)
+summary(m_ate1)
+
+
+stargazer(m_ate, type="text", out="mahalanobis2.html") 
+
+# проверим способом optimal
+m_out1 <- matchit(married ~ .-money1, data = data_all_male,exact="year",
+                  method = "optimal",
+                  distance = "glm", ratio = 7, replace = FALSE) 
+summary(m_out1)
+plot(summary(m_out1))
+m_data1 <- match.data(m_out1)
+m_ate1 <- lm(money1 ~ married, data = m_data1, weights = m_data1$weights)
+summary(m_ate1)
+stargazer(m_ate1, type="text", out="modoptimal.html")
+
+
+table1 <- m_data %>% select(subclass, money1, married)
+tab_m <- filter(table1, married==1) %>% select(-married)
+tab_s <- filter(table1, married==0)%>% select(-married)
+table3 <- left_join(tab_m, tab_s, by="subclass") %>% select (-subclass)
+table3 <- data.frame(table3)
+
+par(mfrow=c(2,1))
+ggplot(table3, aes(x=money1.x)) + 
+  geom_histogram(aes(y = ..density..), colour="black", fill="white")  + 
+  scale_y_continuous(name="доля") +labs( title = "Женились")+
+  scale_x_continuous(name = "среднемесячная з/п", limits = c(0, 150000), breaks = c(seq(0, 150000, 50000)))+
+  geom_density(alpha=.2, fill="#FF6666")
+
+ggplot(table3, aes(x=money1.y)) + 
+  geom_histogram(aes(y = ..density..), colour="black", fill="white")  + 
+  scale_y_continuous(name="доля") +labs( title = "Холостые", x="среднемесячная з/п")+
+  geom_density(alpha=.2, fill="#FF6666")
+
+
+
+# таблица (обрезанные данные)
+m_ate <- summary(m_ate)[5]%>% as.data.frame()
+
+m <- matrix(ncol = 4, nrow = 7)
+m[1,1] <- round(m_ate$coefficients.Estimate[1], 2)
+m[1,2] <- round(m_ate$coefficients.Estimate[2], 2)
+m[1, 3] <-round( m_ate$coefficients.t.value[2], 2)
+m[1, 4] <- as.data.frame(summary(m_out)[2])$nn.Treated[4]
+
+
+m_min_data <- subset(data_all_male, money1>13793)
+mod_min <- matchit(married ~ .-money1, data = m_min_data,exact="year",
+                   method = "nearest",
+                   distance = "glm", ratio=7, replace = FALSE)
+summary(mod_min)
+match_min_data <- match.data(mod_min)
+m_min <- lm(money1 ~ married, data = match_min_data, weights = match_min_data$weights)
+summary(m_min)
+plot(summary(mod_min))
+
+m_min<- summary(m_min)[5]%>% as.data.frame()
+m[2,1] <- round(m_min$coefficients.Estimate[1], 2)
+m[2,2] <- round(m_min$coefficients.Estimate[2], 2)
+m[2, 3] <- round(m_min$coefficients.t.value[2], 2)
+m[2, 4] <- as.data.frame(summary(mod_min)[2])$nn.Treated[4]
+
+summary(m_min_data$money1)
+
+m_10_data <- subset(data_all_male, money1>(quantile(m_min_data$money1, 0.1)))
+mod_10 <- matchit(married ~ .-money1, data = m_10_data,exact="year",
+                  method = "nearest",
+                  distance = "glm", ratio=7, replace = FALSE)
+summary(mod_10)
+match_10_data <- match.data(mod_10)
+m_10 <- lm(money1 ~ married, data = match_10_data, weights = match_10_data$weights)
+m_10<- summary(m_10)[5]%>% as.data.frame()
+m[3,1] <- round(m_10$coefficients.Estimate[1], 2)
+m[3,2] <- round(m_10$coefficients.Estimate[2], 2)
+m[3, 3] <- round(m_10$coefficients.t.value[2], 2)
+m[3, 4] <- as.data.frame(summary(mod_10)[2])$nn.Treated[4]
+
+
+m_20_data <- subset(data_all_male, money1>(quantile(m_min_data$money1, 0.2)))
+mod_20 <- matchit(married ~ .-money1, data = m_20_data,exact="year",
+                  method = "nearest",
+                  distance = "glm", ratio=7, replace = FALSE)
+summary(mod_20)
+match_20_data <- match.data(mod_20)
+m_20 <- lm(money1 ~ married, data = match_20_data, weights = match_20_data$weights)
+m_20<- summary(m_20)[5]%>% as.data.frame()
+m[4,1] <- round(m_20$coefficients.Estimate[1], 2)
+m[4,2] <- round(m_20$coefficients.Estimate[2], 2)
+m[4, 3] <- round(m_20$coefficients.t.value[2], 2)
+m[4, 4] <- as.data.frame(summary(mod_20)[2])$nn.Treated[4]
+
+
+m_30_data <- subset(data_all_male, money1>(quantile(m_min_data$money1, 0.3)))
+mod_30 <- matchit(married ~ .-money1, data = m_30_data,exact="year",
+                  method = "nearest",
+                  distance = "glm", ratio=7, replace = FALSE)
+summary(mod_30)
+match_30_data <- match.data(mod_30)
+m_30 <- lm(money1 ~ married, data = match_30_data, weights = match_30_data$weights)
+m_30<- summary(m_30)[5]%>% as.data.frame()
+m[5,1] <- round(m_30$coefficients.Estimate[1], 2)
+m[5,2] <- round(m_30$coefficients.Estimate[2], 2)
+m[5, 3] <- round(m_30$coefficients.t.value[2], 2)
+m[5, 4] <- as.data.frame(summary(mod_30)[2])$nn.Treated[4]
+
+
+m_40_data <- subset(data_all_male, money1>(quantile(m_min_data$money1, 0.4)))
+mod_40 <- matchit(married ~ .-money1, data = m_40_data,exact="year",
+                  method = "nearest",
+                  distance = "glm", ratio=7, replace = FALSE)
+summary(mod_40)
+match_40_data <- match.data(mod_40)
+m_40 <- lm(money1 ~ married, data = match_40_data, weights = match_40_data$weights)
+m_40<- summary(m_40)[5]%>% as.data.frame()
+m[6,1] <- round(m_40$coefficients.Estimate[1], 2)
+m[6,2] <- round(m_40$coefficients.Estimate[2], 2)
+m[6, 3] <- round(m_40$coefficients.t.value[2],2)
+m[6, 4] <- as.data.frame(summary(mod_40)[2])$nn.Treated[4]
+
+m_50_data <- subset(data_all_male, money1>(quantile(m_min_data$money1, 0.5)))
+mod_50 <- matchit(married ~ .-money1, data = m_50_data,exact="year",
+                  method = "nearest",
+                  distance = "glm", ratio=7, replace = FALSE)
+summary(mod_50)
+match_50_data <- match.data(mod_50)
+m_50 <- lm(money1 ~ married, data = match_50_data, weights = match_50_data$weights)
+m_50<- summary(m_50)[5]%>% as.data.frame()
+m[7,1] <- round(m_50$coefficients.Estimate[1], 2)
+m[7,2] <- round(m_50$coefficients.Estimate[2], 2)
+m[7, 3] <- round(m_50$coefficients.t.value[2],2)
+m[7, 4] <- as.data.frame(summary(mod_50)[2])$nn.Treated[4]
+
+m <-  data.frame(m)
+m$Names <- c( "З/п больше 0","З/п больше прожиточного минимума" , "Отсечка - 10%","Отсечка - 20%", "Отсечка - 30%", "Отсечка - 40%", "Отсечка - 50%")
+m$group <- c( "","" ,"З/п больше, чем у наименьших х% от з/п больше прожиточного минимума", "З/п больше, чем у наименьших х% от з/п больше прожиточного минимума", "З/п больше, чем у наименьших х% от з/п больше прожиточного минимума", "З/п больше, чем у наименьших х% от з/п больше прожиточного минимума", "З/п больше, чем у наименьших х% от з/п больше прожиточного минимума")
+
+
+m%>% 
+  gt(
+    
+    rowname_col = "Names",
+    groupname_col = "group"
+  )%>%
+  cols_label(
+    X1 = "Средняя з/п в контроле",
+  )%>%
+  cols_label(
+    X2 = "Эффект брака",
+  )%>%
+  cols_label(
+    X3 = "t-value"
+  )%>%
+  cols_label(
+    X4 = "Наблюдений в treatment"
+  )%>% gt::gtsave(filename = "robust_mar_lmoney_new.html")
+
+
+####2004-2021 эффект развода без детей####
+
+data_all <- bind_rows(ndata1, ndata2, ndata3, ndata4, ndata5, ndata6, ndata7, ndata8, ndata9,ndata10, ndata11, ndata12, ndata13, ndata14, ndata15, ndata16, ndata17, ndata18, ndata19, ndata20, ndata21)
+
+data_cpi <- read_excel("C:/Users/dirub/Downloads/defl.xlsx", sheet="cpi2")
+data_cpi <- gather(data_cpi,"key", "value", -region)
+names(data_cpi) <- c("region", "year", "cpi")
+data_cpi$year <- as.numeric(data_cpi$year)
+data_all <- left_join(data_all, data_cpi, by=c("region","year"))
+
+data_lmin <- read_excel("C:/Users/dirub/Downloads/defl.xlsx", sheet="lmin")
+data_all <- left_join(data_all, data_lmin, by='region')
+
+data_all$working <- ifelse (as.numeric(data_all$yj1)==1|as.numeric(data_all$yj1)==3,1, ifelse (as.numeric(data_all$yj1)==2|as.numeric(data_all$yj1)==4|as.numeric(data_all$yj1)==5, 0,data_all$yj1))
+data_all$exp <- as.numeric(data_all$yj161.3y)
+data_all$male <- ifelse(data_all$yh5==1,1,0)
+data_all1 <- as.data.frame(class.ind(data_all$status))
+
+names(data_all1) <- c('oc', 'city', 'pgt', 'rural')
+data_all <- cbind(data_all,data_all1)
+educ <- ifelse(data_all$y_diplom<4, 1, ifelse(data_all$y_diplom==5|data_all$y_diplom==4, 2,ifelse(data_all$y_diplom==6, 3,data_all$y_diplom)))
+data_all2 <-  as.data.frame(class.ind(educ))
+names(data_all2) <- c('educ1', 'educ2', 'educ3', 'n1','n2', 'n3')
+data_all <- cbind(data_all,data_all2)
+data_all$hours <- ifelse(data_all$working==1, data_all$yj6.2, 0)
+data_all$money <- ifelse(data_all$working==1,data_all$yj13.2 , 0 )
+data_all$money1 <- data_all$money*data_all$cpi*data_all$lmin_def
+
+data_all3 <-  as.data.frame(class.ind(data_all$y_marst))
+names(data_all3) <- c('single', 'married', 'living', 'divorced', 'widowed', 'separated', 'none1', 'none2', 'none3')
+data_all <- cbind(data_all,data_all3)
+data_all <- subset(data_all,none1==0&none2==0&none3==0&n1==0&n2==0&n3==0)
+
+data_all <- select(data_all, -none1, -none2, -none3, -n1, -n2, -n3)
+
+#контроль на прошлую зп
+datak_all1 <- pdata.frame(data_all,
+                          index = c("idind", "year"),
+                          row.names = TRUE)
+datak_all1$lmarried <- stats::lag(datak_all1$married, 1)
+datak_all1$lmoney <- stats::lag(datak_all1$money1, 1)
+
+
+datak_all1 <- datak_all1[ ! (is.na(datak_all1$yj161.3y  )), ]
+datak_all1 <- datak_all1[ ! (is.na(datak_all1$yj1  )), ] 
+datak_all1 <- datak_all1[ ! (is.na(datak_all1$y_marst  )), ]
+datak_all1 <- subset(datak_all1,hours<80 & yj1<99999997 & yj161.3y<100 & yh5<99999997 &y_diplom<99999997 & status<99999997 & money1<99999997& y_marst<99999997&y_age<60 &y_age>15)
+datak_all1 <- datak_all1[,-c(2:9)]
+datak_all1 <- select(datak_all1, -idind, -money, -cpi, -lmin_def) 
+
+
+datak_all1 <- subset(datak_all1, divorced==1|married==1)
+datak_all1 <- subset(datak_all1, lmarried==1)
+datak_all1 <- datak_all1[ ! (is.na(datak_all1$lmoney  )), ] 
+
+datak_all1 <- select(datak_all1,-single, -separated, -married, -lmarried, -widowed, -living)
+# datak_all1 <- select(datak_all1, -year)
+datak_all1 <- select(datak_all1, -region) #, -year
+datak_all1 <- subset(datak_all1, lmoney<999999)
+
+datak_all1 <- subset(datak_all1,hours<80)
+datak_all1 <- subset(datak_all1,money1<160000 & lmoney<160000)
+# datak_all1 <- select(datak_all1,  -year )
+datak_all1$beginwork <- datak_all1$y_age-datak_all1$exp
+subset(datak_all1,beginwork>15)
+datak_all1 <- select(datak_all1,-beginwork)
+datak_all1 <-  subset(datak_all1, lmoney>0&money1>0)
+
+#для мужчин
+datak_all_male <- subset(datak_all1, male==1)
+datak_all_male <- select(datak_all_male, -male)
+
+
+hist(datak_all_male$money1)
+# модель
+
+mod <- matchit(divorced ~ . - money1, datak_all_male ,exact="year",
+               distance = "glm", replace = FALSE, ratio=7)
+summary(mod)
+m_data <- match.data(mod)
+m_ate <- lm(money1 ~ divorced, data = m_data, weights = m_data$weights)
+summary(m_ate)
+
+stargazer(m_ate, type="text", out="divorce.html")
+plot(summary(mod))
+
+m_ate <- summary(m_ate)[5]%>% as.data.frame()
+# таблица (обрезанные данные)
+
+m <- matrix(ncol = 4, nrow = 7)
+m[1,1] <- round(m_ate$coefficients.Estimate[1], 2)
+m[1,2] <- round(m_ate$coefficients.Estimate[2], 2)
+m[1, 3] <-round( m_ate$coefficients.t.value[2], 2)
+m[1, 4] <- as.data.frame(summary(m_out)[2])$nn.Treated[4]
+
+
+m_min_data <- subset(datak_all_male, money1>13793)
+mod_min <- matchit(divorced ~ .-money1, data = m_min_data,exact="year",
+                   method = "nearest",
+                   distance = "glm", ratio=7, replace = FALSE)
+summary(mod_min)
+match_min_data <- match.data(mod_min)
+m_min <- lm(money1 ~ divorced, data = match_min_data, weights = match_min_data$weights)
+m_min<- summary(m_min)[5]%>% as.data.frame()
+m[2,1] <- round(m_min$coefficients.Estimate[1], 2)
+m[2,2] <- round(m_min$coefficients.Estimate[2], 2)
+m[2, 3] <- round(m_min$coefficients.t.value[2], 2)
+m[2, 4] <- as.data.frame(summary(mod_min)[2])$nn.Treated[4]
+
+
+m_10_data <- subset(datak_all_male, money1>(quantile(m_min_data$money1, 0.1)))
+mod_10 <- matchit(divorced ~ .-money1, data = m_10_data,exact="year",
+                  method = "nearest",
+                  distance = "glm", ratio=7, replace = FALSE)
+summary(mod_10)
+match_10_data <- match.data(mod_10)
+m_10 <- lm(money1 ~ divorced, data = match_10_data, weights = match_10_data$weights)
+m_10<- summary(m_10)[5]%>% as.data.frame()
+m[3,1] <- round(m_10$coefficients.Estimate[1], 2)
+m[3,2] <- round(m_10$coefficients.Estimate[2], 2)
+m[3, 3] <- round(m_10$coefficients.t.value[2], 2)
+m[3, 4] <- as.data.frame(summary(mod_10)[2])$nn.Treated[4]
+
+
+m_20_data <- subset(datak_all_male, money1>(quantile(m_min_data$money1, 0.2)))
+mod_20 <- matchit(divorced ~ .-money1, data = m_20_data,exact="year",
+                  method = "nearest",
+                  distance = "glm", ratio=7, replace = FALSE)
+summary(mod_20)
+match_20_data <- match.data(mod_20)
+m_20 <- lm(money1 ~ divorced, data = match_20_data, weights = match_20_data$weights)
+m_20<- summary(m_20)[5]%>% as.data.frame()
+m[4,1] <- round(m_20$coefficients.Estimate[1], 2)
+m[4,2] <- round(m_20$coefficients.Estimate[2], 2)
+m[4, 3] <- round(m_20$coefficients.t.value[2], 2)
+m[4, 4] <- as.data.frame(summary(mod_20)[2])$nn.Treated[4]
+
+
+m_30_data <- subset(datak_all_male, money1>(quantile(m_min_data$money1, 0.3)))
+mod_30 <- matchit(divorced ~ .-money1, data = m_30_data,exact="year",
+                  method = "nearest",
+                  distance = "glm", ratio=7, replace = FALSE)
+summary(mod_30)
+match_30_data <- match.data(mod_30)
+m_30 <- lm(money1 ~ divorced, data = match_30_data, weights = match_30_data$weights)
+m_30<- summary(m_30)[5]%>% as.data.frame()
+m[5,1] <- round(m_30$coefficients.Estimate[1], 2)
+m[5,2] <- round(m_30$coefficients.Estimate[2], 2)
+m[5, 3] <- round(m_30$coefficients.t.value[2], 2)
+m[5, 4] <- as.data.frame(summary(mod_30)[2])$nn.Treated[4]
+
+
+m_40_data <- subset(datak_all_male, money1>(quantile(m_min_data$money1, 0.4)))
+mod_40 <- matchit(divorced ~ .-money1, data = m_40_data,exact="year",
+                  method = "nearest",
+                  distance = "glm", ratio=7, replace = FALSE)
+summary(mod_40)
+match_40_data <- match.data(mod_40)
+m_40 <- lm(money1 ~ divorced, data = match_40_data, weights = match_40_data$weights)
+m_40<- summary(m_40)[5]%>% as.data.frame()
+m[6,1] <- round(m_40$coefficients.Estimate[1], 2)
+m[6,2] <- round(m_40$coefficients.Estimate[2], 2)
+m[6, 3] <- round(m_40$coefficients.t.value[2],2)
+m[6, 4] <- as.data.frame(summary(mod_40)[2])$nn.Treated[4]
+
+m_50_data <- subset(datak_all_male, money1>(quantile(m_min_data$money1, 0.5)))
+mod_50 <- matchit(divorced ~ .-money1, data = m_50_data,exact="year",
+                  method = "nearest",
+                  distance = "glm", ratio=7, replace = FALSE)
+summary(mod_50)
+match_50_data <- match.data(mod_50)
+m_50 <- lm(money1 ~ divorced, data = match_50_data, weights = match_50_data$weights)
+m_50<- summary(m_50)[5]%>% as.data.frame()
+m[7,1] <- round(m_50$coefficients.Estimate[1], 2)
+m[7,2] <- round(m_50$coefficients.Estimate[2], 2)
+m[7, 3] <- round(m_50$coefficients.t.value[2],2)
+m[7, 4] <- as.data.frame(summary(mod_50)[2])$nn.Treated[4]
+
+m <-  data.frame(m)
+m$Names <- c( "З/п больше 0","З/п больше прожиточного минимума" , "Отсечка - 10%","Отсечка - 20%", "Отсечка - 30%", "Отсечка - 40%", "Отсечка - 50%")
+m$group <- c( "","" ,"З/п больше, чем у наименьших х% от з/п больше прожиточного минимума", "З/п больше, чем у наименьших х% от з/п больше прожиточного минимума", "З/п больше, чем у наименьших х% от з/п больше прожиточного минимума", "З/п больше, чем у наименьших х% от з/п больше прожиточного минимума", "З/п больше, чем у наименьших х% от з/п больше прожиточного минимума")
+
+
+m%>% 
+  gt(
+    
+    rowname_col = "Names",
+    groupname_col = "group"
+  )%>%
+  cols_label(
+    X1 = "Средняя з/п в контроле",
+  )%>%
+  cols_label(
+    X2 = "Эффект брака",
+  )%>%
+  cols_label(
+    X3 = "t-value"
+  )%>%
+  cols_label(
+    X4 = "Наблюдений в treatment"
+  )%>% gt::gtsave(filename = "robust_div_lmoney.html")
+
+####2004-2021 эффект развода через 2 года без детей и с детьми####
+
+data_all <- bind_rows(ddata4, ddata5, ddata6, ddata7, ddata8, ddata9, ddata10, ddata11, ddata12, ddata13, ddata14, ddata15, ddata16, ddata17, ddata18, ddata19, ddata20, ddata21)
+
+
+data_cpi <- read_excel("C:/Users/dirub/Downloads/defl.xlsx", sheet="cpi2")
+data_cpi <- gather(data_cpi,"key", "value", -region)
+names(data_cpi) <- c("region", "year", "cpi")
+data_cpi$year <- as.numeric(data_cpi$year)
+data_all <- left_join(data_all, data_cpi, by=c("region","year"))
+
+data_lmin <- read_excel("C:/Users/dirub/Downloads/defl.xlsx", sheet="lmin")
+data_all <- left_join(data_all, data_lmin, by='region')
+
+data_all <- subset(data_all, yj1==1|yj1==3|yj1==5)
+
+
+data_all$working <- ifelse (as.numeric(data_all$yj1)==1|as.numeric(data_all$yj1)==3,1, ifelse (as.numeric(data_all$yj1)==2|as.numeric(data_all$yj1)==4|as.numeric(data_all$yj1)==5, 0,data_all$yj1))
+data_all$exp <- as.numeric(data_all$yj161.3y)
+data_all$male <- ifelse(data_all$yh5==1,1,0)
+data_all1 <- as.data.frame(class.ind(data_all$status))
+
+names(data_all1) <- c('oc', 'city', 'pgt', 'rural')
+data_all <- cbind(data_all,data_all1)
+educ <- ifelse(data_all$y_diplom<4, 1, ifelse(data_all$y_diplom==5|data_all$y_diplom==4, 2,ifelse(data_all$y_diplom==6, 3,data_all$y_diplom)))
+data_all2 <-  as.data.frame(class.ind(educ))
+names(data_all2) <- c('educ1', 'educ2', 'educ3', 'n1','n2', 'n3')
+data_all <- cbind(data_all,data_all2)
+data_all$hours <- ifelse(data_all$working==1, data_all$yj6.2, 0)
+data_all$money <- ifelse(data_all$working==1,data_all$yj13.2 , 0 )
+data_all$money1 <- data_all$money*data_all$cpi*data_all$lmin_def
+
+
+data_all3 <-  as.data.frame(class.ind(data_all$y_marst))
+names(data_all3) <- c('single', 'married', 'living', 'divorced', 'widowed', 'separated', 'none1', 'none2', 'none3')
+data_all <- cbind(data_all,data_all3)
+data_all <- subset(data_all,none1==0&none2==0&none3==0&n1==0&n2==0&n3==0)
+#children
+data_all <- select(data_all, -none1, -none2, -none3, -n1, -n2, -n3)
+data_all$child <- data_all$yj72.171
+data_all$children <- data_all$yj72.172
+data_all$children18 <- data_all$yj72.173
+
+
+data_all$kids <- ifelse(data_all$child==2, 0, data_all$children)
+data_all <- subset(data_all, kids<30)
+data_all <- data_all[ ! (is.na(data_all$kids)), ]
+data_all <- data_all[ ! (is.na(data_all$child)), ]
+data_all <- select(data_all, - child, -children, -children18)
+
+#контроль на прошлую зп
+datak_all1 <- pdata.frame(data_all,
+                          index = c("idind", "year"),
+                          row.names = TRUE)
+datak_all1$lmarried <- stats::lag(datak_all1$married, 2)
+datak_all1$lmoney <- stats::lag(datak_all1$money1, 2)
+
+
+datak_all1 <- datak_all1[ ! (is.na(datak_all1$yj161.3y  )), ]
+datak_all1 <- datak_all1[ ! (is.na(datak_all1$yj1  )), ] 
+datak_all1 <- datak_all1[ ! (is.na(datak_all1$y_marst  )), ]
+datak_all1 <- subset(datak_all1,hours<80 & yj1<99999997 & yj161.3y<100 & yh5<99999997 &y_diplom<99999997 & status<99999997 & money1<99999997& y_marst<99999997&y_age<60 &y_age>15)
+datak_all1 <- datak_all1[,-c(2:9)]
+datak_all1 <- select(datak_all1, -idind, -money, -cpi, -lmin_def) 
+datak_all1 <- select(datak_all1, -yj72.173, -yj72.172, -yj72.171) 
+
+datak_all1 <- subset(datak_all1, divorced==1|married==1)
+datak_all1 <- subset(datak_all1, lmarried==1)
+datak_all1 <- datak_all1[ ! (is.na(datak_all1$lmoney  )), ] 
+
+datak_all1 <- select(datak_all1,-single, -separated, -married, -lmarried, -widowed, -living)
+# datak_all1 <- select(datak_all1, -year)
+datak_all1 <- select(datak_all1, -region) #, -year
+datak_all1 <- subset(datak_all1, lmoney<999999)
+
+datak_all1 <- subset(datak_all1,hours<80)
+datak_all1 <- subset(datak_all1,money1<160000  &lmoney<160000)
+# datak_all1 <- select(datak_all1,  -year )
+datak_all1$beginwork <- datak_all1$y_age-datak_all1$exp
+subset(datak_all1,beginwork>15)
+datak_all1 <- select(datak_all1,-beginwork)
+datak_all1 <- subset(datak_all1, kids<5)
+datak_all1 <- subset(datak_all1,money1>0 &lmoney>0 )
+
+datak_all_male <- subset(datak_all1, male==1)
+datak_all_male <- select(datak_all_male, -male)
+
+hist(datak_all_male$money1)
+# модель
+datak_all_male <- subset(datak_all_male, lmoney>0&money1>0)
+mod <- matchit(divorced ~ . - money1, datak_all_male ,exact="year",
+               distance = "glm", replace = FALSE, ratio=7)
+summary(mod)
+m_data <- match.data(mod)
+m_ate <- lm(money1 ~ divorced, data = m_data, weights = m_data$weights)
+summary(m_ate)
+# без детей
+datak_all_male1 <- select(datak_all_male, -kids)
+mod <- matchit(divorced ~ . - money1, datak_all_male1 , exact="year",
+               distance = "glm", replace = FALSE, ratio=7)
+summary(mod)
+m_data <- match.data(mod)
+m_ate1 <- lm(money1 ~ divorced, data = m_data, weights = m_data$weights)
+summary(m_ate1)
+
+plot(summary(mod))
+stargazer(m_ate1,m_ate, type="text", out="divorce2.html")
+
+####olsFE с детьми####
+data_all <- bind_rows( ddata15,ddata16,ddata17, ddata18, ddata19, ddata20, ddata21)
+
+data_cpi <- read_excel("C:/Users/dirub/Downloads/defl.xlsx", sheet="cpi2")
+data_cpi <- gather(data_cpi,"key", "value", -region)
+names(data_cpi) <- c("region", "year", "cpi")
+data_cpi$year <- as.numeric(data_cpi$year)
+data_all <- left_join(data_all, data_cpi, by=c("region","year"))
+
+data_lmin <- read_excel("C:/Users/dirub/Downloads/defl.xlsx", sheet="lmin")
+data_all <- left_join(data_all, data_lmin, by='region')
+
+data_all <- subset(data_all, yj1==1|yj1==3|yj1==5)
+
+
+data_all$working <- ifelse (as.numeric(data_all$yj1)==1|as.numeric(data_all$yj1)==3,1, ifelse (as.numeric(data_all$yj1)==2|as.numeric(data_all$yj1)==4|as.numeric(data_all$yj1)==5, 0,data_all$yj1))
+data_all$exp <- as.numeric(data_all$yj161.3y)
+data_all$male <- ifelse(data_all$yh5==1,1,0)
+data_all1 <- as.data.frame(class.ind(data_all$status))
+
+names(data_all1) <- c('oc', 'city', 'pgt', 'rural')
+data_all <- cbind(data_all,data_all1)
+educ <- ifelse(data_all$y_diplom<4, 1, ifelse(data_all$y_diplom==5|data_all$y_diplom==4, 2,ifelse(data_all$y_diplom==6, 3,data_all$y_diplom)))
+data_all2 <-  as.data.frame(class.ind(educ))
+names(data_all2) <- c('educ1', 'educ2', 'educ3', 'n1','n2', 'n3')
+data_all <- cbind(data_all,data_all2)
+data_all$hours <- ifelse(data_all$working==1, data_all$yj6.2, 0)
+data_all$money <- ifelse(data_all$working==1,data_all$yj13.2 , 0 )
+data_all$money1 <- data_all$money*data_all$cpi*data_all$lmin_def
+
+
+data_all3 <-  as.data.frame(class.ind(data_all$y_marst))
+names(data_all3) <- c('single', 'married', 'living', 'divorced', 'widowed', 'separated', 'none1', 'none2', 'none3')
+data_all <- cbind(data_all,data_all3)
+data_all <- subset(data_all,none1==0&none2==0&none3==0&n1==0&n2==0&n3==0)
+
+data_all <- select(data_all, -none1, -none2, -none3, -n1, -n2, -n3)
+
+
+data_all$child <- data_all$yj72.171
+data_all$children <- data_all$yj72.172
+data_all$children18 <- data_all$yj72.173
+
+
+data_all$kids <- ifelse(data_all$child==2, 0, data_all$children)
+data_all <- subset(data_all, kids<30)
+data_all <- data_all[ ! (is.na(data_all$kids)), ]
+data_all <- data_all[ ! (is.na(data_all$child)), ]
+data_all <- select(data_all, - child, -children, -children18)
+# ограничу
+
+data_all <- data_all[ ! (is.na(data_all$yj161.3y  )), ]
+data_all <- data_all[ ! (is.na(data_all$yj1  )), ] 
+data_all <- data_all[ ! (is.na(data_all$money  )), ] 
+data_all <- data_all[ ! (is.na(data_all$y_marst  )), ]
+data_all <- subset(data_all,hours<80 & yj1<99999997 & yj161.3y<100 & yh5<99999997 &y_diplom<99999997 & status<99999997 & money<99999997 & y_marst<99999997&y_age<60 &y_age>15)
+data_all <- data_all[,-c(2:9)]
+data_all <- select(data_all,  -region, -lmin_def, -cpi, -money)
+
+data_all <- subset(data_all,hours<80)
+data_all <- subset(data_all,money1<160000  )
+# data_all <- select(data_all,  -year )
+data_all$beginwork <- data_all$y_age-data_all$exp
+subset(data_all,beginwork>15)
+data_all <- select(data_all,-beginwork)
+data_all <- subset(data_all, kids<5)
+# для мужчин
+data_all_male <- subset(data_all, male==1)
+# data_all_male$money1 <- log(data_all_male$money1+1)
+data_all_male$age2 <- data_all_male$y_age*data_all_male$y_age
+data_all_male$exp2 <- data_all_male$exp*data_all_male$exp
+S1 <- data_all_male
+
+S2 <- filter(S1, money1 != 0, hours != 0)
+datafe <- dplyr::select(S2, idind)
+fe <- datafe %>% count(idind)%>% subset(n>=3)
+data_fe <- subset(S2, idind %in% fe$idind)
+data_fe <- as.data.frame(data_fe)
+data2 <- pdata.frame(data_fe, index = c("idind", "year"))
+
+mod2 <- plm(log(money1)~y_age+married+age2+hours+widowed+living+divorced+separated
+            + city+pgt+oc+educ1+educ3+kids,
+            data = data2, model = "within", effect = "twoways")
+summary(mod2, se = cse(mod2))
+stargazer(mod2, se=list(cse(mod2)), type="text")
+
+
+#ограничиваю только для тех, кто менял свой статус (Married)
+data_help <- data2 %>% select(idind, married)%>% group_by(idind) %>% summarize_all(function (x) {mean(x)
+})
+data_help <-subset(data_help,married>0&married<1)
+data_change <- subset(data2, idind %in% data_help$idind)
+unique(data2$idind)
+#
+
+data_help <- data2 %>% select(idind, educ2)%>% group_by(idind) %>% summarize_all(function (x) {mean(x)
+})
+data_help <-subset(data_help,educ2>0&educ2<1)
+data_change <- subset(data2, idind %in% data_help$idind)
+unique(data_change$idind)
+
+data_help <- data2 %>% select(idind, educ3)%>% group_by(idind) %>% summarize_all(function (x) {mean(x)
+})
+data_help <-subset(data_help, educ3>0& educ3<1)
+data_change <- subset(data2, idind %in% data_help$idind)
+unique(data_change$idind)
+#
+mod2_change <- plm(money1~y_age+married+age2+hours
+                   +y_age*married+married*age2+ city+pgt+oc+educ2+educ3,
+                   data = data_change, model = "within", effect = "twoways")
+summary(mod2_change)
+stargazer(mod2_change, se=list(cse(mod2_change)), type="text")
+#МНК
+mod1 <- lm( log(money1)~y_age+married+age2+hours+widowed+living+divorced+separated
+            + city+pgt+oc+educ1+educ3+kids,data2)
+
+stargazer(mod1, se=list(cse(mod1)), type="text")
+coef(mod1)
+
+mod11 <- lm( log(money1)~y_age+married+age2+hours+widowed+living+divorced+separated
+             + city+pgt+oc+educ2+educ3+kids+married*y_age+married*age2,data2) 
+
+stargazer(mod11, se=list(cse(mod11)), type="text")
+waldtest(mod1, mod11, vcov=vcovHC(mod11, type="HC1") )
+
+#
+model1 <- lm( log(money1)~kids+hours+y_age+age2+married,data3)
+
+data3 <- data2
+data3$kids <- ifelse(data3$kids>=2, 2,data3$kids ) %>% as.factor()
+table(data2$kids, data2$divorced)
+table(data2$kids, data2$single)
+table(data2$kids, data2$separated) #их в принципе мало
+table(data2$kids, data2$widowed)
+table(data2$kids, data2$living)
+table(data2$kids, data2$married)
+
+
+stargazer(model1, se=list(cse(model1)), type="text")
+vif(model1)
+cor(data2$kids, data2$hours)
+
+
+g <- data.frame(age, premium)
+ggplot(g, aes(age, premium))+geom_line()
+summary(mod2)
+
+stargazer(mod1, mod2, se = list(cse(mod1), cse(mod2)), type = "text", column.labels = c("МНК", "ФЕ"), out="OLSandFEkids.html")
+
+
+data3 <- subset(data2, money1>13793)
+mod2 <- plm(log(money1)~y_age+married+age2+hours+widowed+living+divorced+separated
+            + city+pgt+oc+educ1+educ3+kids,
+            data = data3, model = "within", effect = "twoways")
+summary(mod2, se = cse(mod2))
+stargazer(mod2, se=list(cse(mod2)), type="text")
+
+#МНК
+mod1 <- lm( log(money1)~y_age+married+age2+hours+widowed+living+divorced+separated
+            + city+pgt+oc+educ1+educ3+kids,data3)
+
+stargazer(mod1, se=list(cse(mod1)), type="text")
+
+stargazer(mod1, mod2, se = list(cse(mod1), cse(mod2)), type = "text", column.labels = c("МНК", "ФЕ"), out="OLSandFEkids_lmin_robust.html")
+####2021 год  (ols с детьми и без сравнение)####
+
+data_cpi <- read_excel("C:/Users/dirub/Downloads/defl.xlsx", sheet="cpi2")
+data_cpi <- gather(data_cpi,"key", "value", -region)
+names(data_cpi) <- c("region", "year", "cpi")
+data_cpi$year <- as.numeric(data_cpi$year)
+data_all <- left_join(ddata21, data_cpi, by=c("region","year"))
+
+data_lmin <- read_excel("C:/Users/dirub/Downloads/defl.xlsx", sheet="lmin")
+data_all <- left_join(data_all, data_lmin, by='region')
+
+data_all <- subset(data_all, yj1==1|yj1==3|yj1==5)
+
+data_all$working <- ifelse (as.numeric(data_all$yj1)==1|as.numeric(data_all$yj1)==3,1, ifelse (as.numeric(data_all$yj1)==2|as.numeric(data_all$yj1)==4|as.numeric(data_all$yj1)==5, 0,data_all$yj1))
+data_all$exp <- as.numeric(data_all$yj161.3y)
+data_all$male <- ifelse(data_all$yh5==1,1,0)
+data_all1 <- as.data.frame(class.ind(data_all$status))
+
+names(data_all1) <- c('oc', 'city', 'pgt', 'rural')
+data_all <- cbind(data_all,data_all1)
+educ <- ifelse(data_all$y_diplom<4, 1, ifelse(data_all$y_diplom==5|data_all$y_diplom==4, 2,ifelse(data_all$y_diplom==6, 3,data_all$y_diplom)))
+data_all2 <-  as.data.frame(class.ind(educ))
+names(data_all2) <- c('educ1', 'educ2', 'educ3', 'n1')
+data_all <- cbind(data_all,data_all2)
+data_all$hours <- ifelse(data_all$working==1, data_all$yj6.2, 0)
+data_all$money <- ifelse(data_all$working==1,data_all$yj13.2 , 0 )
+data_all$money1 <- data_all$money*data_all$lmin_def*data_all$cpi
+
+
+data_all3 <-  as.data.frame(class.ind(data_all$y_marst))
+names(data_all3) <- c('single', 'married', 'living', 'divorced', 'widowed', 'separated', 'none1', 'none2', 'none3')
+data_all <- cbind(data_all,data_all3)
+data_all <- subset(data_all,none1==0&none2==0&none3==0&n1==0)
+
+data_all <- select(data_all, -none1, -none2, -none3, -n1)
+
+
+data_all <- data_all[ ! (is.na(data_all$yj161.3y  )), ]
+data_all <- data_all[ ! (is.na(data_all$yj1  )), ] 
+data_all <- data_all[ ! (is.na(data_all$money1  )), ] 
+data_all <- data_all[ ! (is.na(data_all$y_marst  )), ]
+data_all <- subset(data_all,hours<80 & yj1<99999997 & yj161.3y<100 & yh5<99999997 &y_diplom<99999997 & status<99999997 & money1<99999997 & y_marst<99999997&y_age<60 &y_age>15)
+data_all <- data_all[,-c(2:9)]
+data_all <- select(data_all, -lmin_def, -region, -idind, -money)
+data_all <- select(data_all, -year, -cpi)
+
+quantile(data_all$money1, 0.98)
+
+#children
+data_all$child <- data_all$yj72.171
+data_all$children <- data_all$yj72.172
+data_all$children18 <- data_all$yj72.173
+
+
+data_all$kids <- ifelse(data_all$child==2, 0, data_all$children)
+data_all <- subset(data_all, kids<30)
+data_all <- data_all[ ! (is.na(data_all$kids)), ]
+data_all <- data_all[ ! (is.na(data_all$child)), ]
+data_all <- select(data_all, -yj72.173, -yj72.172, -yj72.171, -child, -children, -children18)
+stargazer(data_all, type='text', out="data2021.html")
+
+data_male <- subset(data_all, male==1)
+data_male <- select(data_male, -male)
+# data_male <- subset(data_male, money1>0)
+stargazer(data_male, type='text')
+#OLS
+data_male <- data.frame(data_male)
+data_male$money1 <- log(data_male$money1+1)
+data_male <- subset(data_male, money1<12&money1>0)
+
+data_male <- subset(data_male,hours<80)
+data_male <- subset(data_male,money1<160000  )
+# data_male <- select(data_male,  -year )
+data_male$beginwork <- data_male$y_age-data_male$exp
+subset(data_male,beginwork>15)
+data_male <- select(data_male,-beginwork)
+
+mod_children <- lm(log(money1)~.-single-educ1-rural-exp-working+I(y_age^2), data_male)
+summary(mod_children)
+
+mod_without <- lm(log(money1)~.-single-educ1-rural-exp-working+I(y_age^2)- kids, data_male)
+summary(mod_without)
+
+# чистим
+mod3<- stepAIC(mod_children)
+summary(mod3)
+
+anova(mod_children,mod3)
+
+bptest(mod3)
+#гетероскедастичность есть
+
+V <- vcov(mod3, type="HC0")
+coeftest(mod3,V)
+#
+mod31<- stepAIC(mod_without)
+summary(mod31)
+
+anova(mod_without,mod31)
+
+stargazer(mod31, mod3,  type = "text", se = list(cse(mod31), cse(mod3)), out = "olschildrenandno1.html" )
+
+
+
+####инструмент####
+idata20 <- select(data20, idind,yj6.2, yj1, yj161.3y, yh5,y_diplom, status, yj13.2, y_marst , y_age, region ,yj325y,yj72.173 ,yj72.172, yj72.171 )
+idata21 <- select(data21, idind,zj6.2, zj1, zj161.3y, zh5,z_diplom, status, zj13.2, z_marst, z_age, region, zj325y, zj72.173,zj72.172, zj72.171)
+names(idata21) <- names(idata20)
+idata21$year <- rep(2021,nrow(idata21) )
+
+
+data_cpi <- read_excel("C:/Users/dirub/Downloads/defl.xlsx", sheet="cpi2")
+data_cpi <- gather(data_cpi,"key", "value", -region)
+names(data_cpi) <- c("region", "year", "cpi")
+data_cpi$year <- as.numeric(data_cpi$year)
+data_all <- left_join(idata21, data_cpi, by=c("region","year"))
+
+data_lmin <- read_excel("C:/Users/dirub/Downloads/defl.xlsx", sheet="lmin")
+data_all <- left_join(data_all, data_lmin, by='region')
+data_all <- subset(data_all, yj1==1|yj1==3|yj1==5)
+
+data_all$working <- ifelse (as.numeric(data_all$yj1)==1|as.numeric(data_all$yj1)==3,1, ifelse (as.numeric(data_all$yj1)==2|as.numeric(data_all$yj1)==4|as.numeric(data_all$yj1)==5, 0,data_all$yj1))
+data_all$exp <- as.numeric(data_all$yj161.3y)
+data_all$male <- ifelse(data_all$yh5==1,1,0)
+data_all1 <- as.data.frame(class.ind(data_all$status))
+
+names(data_all1) <- c('oc', 'city', 'pgt', 'rural')
+data_all <- cbind(data_all,data_all1)
+educ <- ifelse(data_all$y_diplom<4, 1, ifelse(data_all$y_diplom==5|data_all$y_diplom==4, 2,ifelse(data_all$y_diplom==6, 3,data_all$y_diplom)))
+data_all2 <-  as.data.frame(class.ind(educ))
+names(data_all2) <- c('educ1', 'educ2', 'educ3', 'n1')
+data_all <- cbind(data_all,data_all2)
+data_all$hours <- ifelse(data_all$working==1, data_all$yj6.2, 0)
+data_all$money <- ifelse(data_all$working==1,data_all$yj13.2 , 0 )
+data_all$money1 <- data_all$money*data_all$lmin_def
+
+
+data_all3 <-  as.data.frame(class.ind(data_all$y_marst))
+names(data_all3) <- c('single', 'married', 'living', 'divorced', 'widowed', 'separated', 'none1', 'none2', 'none3')
+data_all <- cbind(data_all,data_all3)
+data_all <- subset(data_all,none1==0&none2==0&none3==0&n1==0)
+
+data_all <- select(data_all, -none1, -none2, -none3, -n1)
+
+
+data_all <- data_all[ ! (is.na(data_all$yj161.3y  )), ]
+data_all <- data_all[ ! (is.na(data_all$yj1  )), ] 
+data_all <- data_all[ ! (is.na(data_all$money1  )), ] 
+data_all <- data_all[ ! (is.na(data_all$y_marst  )), ]
+data_all <- subset(data_all,hours<80 & yj1<99999997 & yj161.3y<100 & yh5<99999997 &y_diplom<99999997 & status<99999997 & money1<99999997 & y_marst<99999997&y_age<60 &y_age>15)
+data_all <- data_all[,-c(2:9)]
+data_all <- select(data_all, -lmin_def, -region, -idind, -money)
+
+#сколько лет живут
+data_all$ylive <- ifelse(data_all$living==1|data_all$married==1, 2021-data_all$yj325y, ifelse(data_all$living==0&data_all$married==0, 0, data_all$yj325y))
+data_all <- subset(data_all, ylive<110&ylive>-1)
+data_all <- data_all[ ! (is.na(data_all$ylive  )), ] 
+
+data_all$ylive1 <- data_all$y_age- data_all$ylive
+
+#
+data_male <- filter(data_all, male==1)
+data_male <- subset(data_male, money1<300000)
+data_male <- subset(data_male, money1>0)
+
+data_male$child <- data_male$yj72.171
+data_male$children <- data_male$yj72.172
+data_male$children18 <- data_male$yj72.173
+
+data_male <- subset(data_male,hours<80)
+data_male <- subset(data_male,money1<160000  )
+# data_male <- select(data_male,  -year )
+data_male$beginwork <- data_male$y_age-data_male$exp
+subset(data_male,beginwork>15)
+data_male <- select(data_male,-beginwork)
+
+data_male$kids <- ifelse(data_male$child==2, 0, data_male$children)
+data_male <- subset(data_male, kids<30)
+data_male <- data_male[ ! (is.na(data_male$kids)), ]
+data_male <- data_male[ ! (is.na(data_male$child)), ]
+
+data_male <- subset(data_male, kids<5)
+cor(data_male$ylive1,data_male$married)
+cor(data_male$ylive1,data_male$money1)
+
+
+iv_model <- ivreg(log(money1) ~ y_age+oc+city+pgt+educ2+educ3+hours+married |y_age+oc+city+pgt+educ2+educ3+hours+ylive,
+                  data = data_male)
+summary(iv_model, diagnostics=TRUE)
+#1OLS
+mo <- lm(married~ ylive1+y_age+oc+city+pgt+educ1+educ3+hours+I(y_age^2), data_male)
+summary(mo)
+stargazer(mo, se=list(cse(mo)), type="text", out="mo.html")
+
+data_male$z <- fitted(mo)
+
+
+#2OLS
+mod_i_nokids <- lm(log(money1)~y_age+oc+city+pgt+educ1+educ3+hours+z+I(y_age^2), data_male)
+summary(mod_i_nokids)
+vif(mod_i_nokids)
+
+#ИНСТРУМЕНТ С ДЕТЬМИ 
+mod_i_kids <- lm(log(money1)~y_age+I(y_age^2)+oc+city+pgt+educ1+educ3+hours+z+kids, data_male)
+vif(mod_i_kids)
+summary(mod_i_kids)
+
+cor(data_male$z, data_male$kids)
+
+stargazer(mod_i_nokids, mod_i_kids, type = "text", column.labels = c("Модель 1", "Модель2"), df = FALSE, se = list(cse(mod_i_nokids), cse(mod_i_kids)), out="instrument_kidsandno.html")
+
+#ЖЕНЩИНЫ
+####ЖЕНЩИНЫ####
+####2001-2021 эффект брака ж####
+
+data_all <- bind_rows(ndata1, ndata2, ndata3, ndata4, ndata5, ndata6, ndata7, ndata8, ndata9, ndata10, ndata11, ndata12, ndata13, ndata14, ndata15, ndata16, ndata17, ndata18, ndata19, ndata20, ndata21)
+
+data_cpi <- read_excel("C:/Users/dirub/Downloads/defl.xlsx", sheet="cpi2")
+data_cpi <- gather(data_cpi,"key", "value", -region)
+names(data_cpi) <- c("region", "year", "cpi")
+data_cpi$year <- as.numeric(data_cpi$year)
+data_all <- left_join(data_all, data_cpi, by=c("region","year"))
+
+data_lmin <- read_excel("C:/Users/dirub/Downloads/defl.xlsx", sheet="lmin")
+data_all <- left_join(data_all, data_lmin, by='region')
+
+data_all <- subset(data_all, yj1==1|yj1==2|yj1==3|yj1==5)
+
+
+data_all$working <- ifelse (as.numeric(data_all$yj1)==1|as.numeric(data_all$yj1)==3,1, ifelse (as.numeric(data_all$yj1)==2|as.numeric(data_all$yj1)==4|as.numeric(data_all$yj1)==5, 0,data_all$yj1))
+data_all$dekret <- ifelse(as.numeric(data_all$yj1==2), 1,0)
+data_all$exp <- as.numeric(data_all$yj161.3y)
+data_all$male <- ifelse(data_all$yh5==1,1,0)
+data_all1 <- as.data.frame(class.ind(data_all$status))
+
+names(data_all1) <- c('oc', 'city', 'pgt', 'rural')
+data_all <- cbind(data_all,data_all1)
+educ <- ifelse(data_all$y_diplom<4, 1, ifelse(data_all$y_diplom==5|data_all$y_diplom==4, 2,ifelse(data_all$y_diplom==6, 3,data_all$y_diplom)))
+data_all2 <-  as.data.frame(class.ind(educ))
+names(data_all2) <- c('educ1', 'educ2', 'educ3', 'n1','n2', 'n3')
+data_all <- cbind(data_all,data_all2)
+data_all$hours <- ifelse(data_all$working==1, data_all$yj6.2, 0)
+data_all$money <- ifelse(data_all$working==1,data_all$yj13.2 , 0 )
+data_all$money1 <- data_all$money*data_all$cpi*data_all$lmin_def
+
+
+data_all3 <-  as.data.frame(class.ind(data_all$y_marst))
+names(data_all3) <- c('single', 'married', 'living', 'divorced', 'widowed', 'separated', 'none1', 'none2', 'none3')
+data_all <- cbind(data_all,data_all3)
+data_all <- subset(data_all,none1==0&none2==0&none3==0&n1==0&n2==0&n3==0)
+
+data_all <- select(data_all, -none1, -none2, -none3, -n1, -n2, -n3)
+
+data_all1 <- pdata.frame(data_all,
+                         index = c("idind", "year"),
+                         row.names = TRUE)
+data_all1$lsingle <- stats::lag(data_all1$single)
+
+#а теперь ограничим
+data_all1 <- data_all1[ ! (is.na(data_all1$yj161.3y  )), ]
+data_all1 <- data_all1[ ! (is.na(data_all1$yj1  )), ] 
+data_all1 <- data_all1[ ! (is.na(data_all1$money1  )), ]
+data_all1 <- data_all1[ ! (is.na(data_all1$y_marst  )), ]
+data_all1 <- subset(data_all1,hours<80 & yj1<99999997 & yj161.3y<100 & yh5<99999997 &y_diplom<99999997 & status<99999997 & money1<99999997 & y_marst<99999997&y_age<60 &y_age>15)
+data_all1 <- data_all1[,-c(2:9)]
+data_all1 <- select(data_all1, -cpi, -lmin_def, -region, -idind, -money)
+
+data_all1 <- subset(data_all1,hours<80)
+data_all1 <- subset(data_all1,money1<160000  )
+# data_all1 <- select(data_all1,  -year )
+data_all1$beginwork <- data_all1$y_age-data_all1$exp
+subset(data_all1,beginwork>15)
+data_all1 <- select(data_all1,-beginwork)
+
+data_all1 <- subset(data_all1, single==1|married==1)
+data_all1 <- subset(data_all1, lsingle==1)
+data_all1 <- select(data_all1, - single, -lsingle, -widowed, -separated, -living, -divorced)
+
+
+#модель 
+data_all_female <- subset(data_all1, male==0)
+data_all_female <- select(data_all_female, -male)
+
+data_all_female <- subset(data_all_female,money1>0)
+# Теперь модел
+m_out <- matchit(married ~ .-money1, data = data_all_female,exact="year",
+                 method = "nearest",
+                 distance = "glm", ratio = 7, replace = FALSE)
+summary(m_out)
+plot(summary(m_out))
+m_data <- match.data(m_out)
+m_ate <- lm(money1 ~ married, data = m_data, weights = m_data$weights)
+summary(m_ate)
+
+
+##контроль на зп до брака
+datak <- pdata.frame(data_all,
+                     index = c("idind", "year"),
+                     row.names = TRUE)
+datak$lsingle <- stats::lag(datak$single)
+datak$lmoney <- stats::lag(datak$money1)
+
+
+datak <- datak[ ! (is.na(datak$yj161.3y  )), ]
+datak <- datak[ ! (is.na(datak$yj1  )), ] 
+datak <- datak[ ! (is.na(datak$money1  )), ]
+datak <- datak[ ! (is.na(datak$y_marst  )), ]
+datak <- subset(datak,hours<80 & yj1<99999997 & yj161.3y<100 & yh5<99999997 &y_diplom<99999997 & status<99999997 & money1<99999997 & y_marst<99999997&y_age<60 &y_age>15&money<999999&lmoney<999999)
+datak <- datak[,-c(2:9)]
+datak <- select(datak, -cpi, -lmin_def, -region, -idind, -money)
+
+
+datak <- subset(datak,hours<80)
+datak <- subset(datak,money1<160000  &lmoney<160000)
+# datak <- select(datak,  -year )
+datak$beginwork <- datak$y_age-datak$exp
+subset(datak,beginwork>15)
+datak <- select(datak,-beginwork)
+
+
+datak <- subset(datak, single==1|married==1)
+datak <- subset(datak, lsingle==1)
+datak <- datak[ ! (is.na(datak$lmoney  )), ]
+datak <- select(datak, - single, -lsingle, -widowed, -separated, -living, -divorced)
+
+data_all_female <- subset(datak, male==0)
+data_all_female <- select(data_all_female, -male)
+
+
+a <- data_all_female$lmoney
+lmon <- data.frame(a)
+b <- data_all_female$money1
+mon <- data_frame(b)
+lmon$lag <- rep(1, nrow(lmon))
+mon$lag <- rep(0, nrow(mon))
+names(mon) <- c("a", "lag")
+datjka <- rbind(mon, lmon)
+
+ggplot(datjka, aes(x=a, fill= as.factor(lag)), colour=lag) +
+  geom_density( alpha=0.4)+ylab("Доля")+xlab("Среднемесячная з/п")+
+  theme(legend.title = element_blank())
+
+
+boxplot(dtatak$y_age)
+quantile((datak$y_age), 0.8)
+
+data_all_female <- subset(datak, male==0)
+data_all_female <- select(data_all_female, -male)
+data_all_female <- data_all_female %>% subset(money1>0&lmoney>0)
+
+
+m_out <- matchit(married ~ .-money1, data = data_all_female,exact="year",
+                 method = "nearest",
+                 distance = "glm", ratio = 7, replace = FALSE) #с нулями 5% значимости рэшио=5
+summary(m_out)
+plot(summary(m_out))
+m_data <- match.data(m_out)
+m_ate <- lm(money1 ~ married, data = m_data, weights = m_data$weights)
+summary(m_ate)
+stargazer(m_ate, type="text", out="wmari.html")
+
+k <- m_data %>% as.data.frame() %>% select(-year,-subclass)
+MatchBalance(married~.,data=k) 
+
+
+table1 <- m_data %>% select(subclass, money1, married)
+tab_m <- filter(table1, married==1) %>% select(-married)
+tab_s <- filter(table1, married==0)%>% select(-married)
+table3 <- left_join(tab_m, tab_s, by="subclass") %>% select (-subclass)
+table3 <- data.frame(table3)
+
+ggplot(table3, aes(x=money1.x)) + 
+  geom_histogram(aes(y = ..density..), colour="black", fill="white")  + 
+  scale_y_continuous(name="доля") +labs( title = "Вышли замуж", x="среднемесячная з/п")+
+  geom_density(alpha=.2, fill="#FF6666")
+
+ggplot(table3, aes(x=money1.y)) + 
+  geom_histogram(aes(y = ..density..), colour="black", fill="white")  + 
+  scale_y_continuous(name="доля") +labs( title = "Незамужние", x="среднемесячная з/п")+
+  geom_density(alpha=.2, fill="#FF6666")
+
+№№№№№№№№№№№№№№№№№№№№№№№№№№№№№№№№№№№№№№№№№№№№№№№№№№№№№№№№№№
+m_ate <- summary(m_ate)[5]%>% as.data.frame()
+# таблица (обрезанные данные)
+
+m <- matrix(ncol = 4, nrow = 6)
+m[1,1] <- round(m_ate$coefficients.Estimate[1], 2)
+m[1,2] <- round(m_ate$coefficients.Estimate[2], 2)
+m[1, 3] <-round( m_ate$coefficients.t.value[2], 2)
+m[1, 4] <- as.data.frame(summary(m_out)[2])$nn.Treated[4]
+
+
+m_min_data <- subset(data_all_female, money1>13793)
+mod_min <- matchit(married ~ .-money1, data = m_min_data,
+                   method = "nearest",
+                   distance = "glm", ratio=7, replace = FALSE)
+summary(mod_min)
+match_min_data <- match.data(mod_min)
+m_min <- lm(money1 ~ married, data = match_min_data, weights = match_min_data$weights)
+m_min<- summary(m_min)[5]%>% as.data.frame()
+m[2,1] <- round(m_min$coefficients.Estimate[1], 2)
+m[2,2] <- round(m_min$coefficients.Estimate[2], 2)
+m[2, 3] <- round(m_min$coefficients.t.value[2], 2)
+m[2, 4] <- as.data.frame(summary(mod_min)[2])$nn.Treated[4]
+
+
+m_10_data <- subset(data_all_female, money1>(quantile(m_min_data$money1, 0.1)))
+mod_10 <- matchit(married ~ .-money1, data = m_10_data,
+                  method = "nearest",
+                  distance = "glm", ratio=7, replace = FALSE)
+summary(mod_10)
+match_10_data <- match.data(mod_10)
+m_10 <- lm(money1 ~ married, data = match_10_data, weights = match_10_data$weights)
+m_10<- summary(m_10)[5]%>% as.data.frame()
+m[3,1] <- round(m_10$coefficients.Estimate[1], 2)
+m[3,2] <- round(m_10$coefficients.Estimate[2], 2)
+m[3, 3] <- round(m_10$coefficients.t.value[2], 2)
+m[3, 4] <- as.data.frame(summary(mod_10)[2])$nn.Treated[4]
+
+
+m_20_data <- subset(data_all_female, money1>(quantile(m_min_data$money1, 0.2)))
+mod_20 <- matchit(married ~ .-money1, data = m_20_data,
+                  method = "nearest",
+                  distance = "glm", ratio=7, replace = FALSE)
+summary(mod_20)
+match_20_data <- match.data(mod_20)
+m_20 <- lm(money1 ~ married, data = match_20_data, weights = match_20_data$weights)
+m_20<- summary(m_20)[5]%>% as.data.frame()
+m[4,1] <- round(m_20$coefficients.Estimate[1], 2)
+m[4,2] <- round(m_20$coefficients.Estimate[2], 2)
+m[4, 3] <- round(m_20$coefficients.t.value[2], 2)
+m[4, 4] <- as.data.frame(summary(mod_20)[2])$nn.Treated[4]
+
+
+m_30_data <- subset(data_all_female, money1>(quantile(m_min_data$money1, 0.3)))
+mod_30 <- matchit(married ~ .-money1, data = m_30_data,
+                  method = "nearest",
+                  distance = "glm", ratio=7, replace = FALSE)
+summary(mod_30)
+match_30_data <- match.data(mod_30)
+m_30 <- lm(money1 ~ married, data = match_30_data, weights = match_30_data$weights)
+m_30<- summary(m_30)[5]%>% as.data.frame()
+m[5,1] <- round(m_30$coefficients.Estimate[1], 2)
+m[5,2] <- round(m_30$coefficients.Estimate[2], 2)
+m[5, 3] <- round(m_30$coefficients.t.value[2], 2)
+m[5, 4] <- as.data.frame(summary(mod_30)[2])$nn.Treated[4]
+
+
+m_40_data <- subset(data_all_female, money1>(quantile(m_min_data$money1, 0.4)))
+mod_40 <- matchit(married ~ .-money1, data = m_40_data,
+                  method = "nearest",
+                  distance = "glm", ratio=7, replace = FALSE)
+summary(mod_40)
+match_40_data <- match.data(mod_40)
+m_40 <- lm(money1 ~ married, data = match_40_data, weights = match_40_data$weights)
+m_40<- summary(m_40)[5]%>% as.data.frame()
+m[6,1] <- round(m_40$coefficients.Estimate[1], 2)
+m[6,2] <- round(m_40$coefficients.Estimate[2], 2)
+m[6, 3] <- round(m_40$coefficients.t.value[2],2)
+m[6, 4] <- as.data.frame(summary(mod_40)[2])$nn.Treated[4]
+
+m <-  data.frame(m)
+m$Names <- c( "З/п больше 0","З/п больше прожиточного минимума" , "Отсечка - 10%","Отсечка - 20%", "Отсечка - 30%", "Отсечка - 40%")
+m$group <- c( "","" ,"З/п больше, чем у наименьших х% от з/п больше прожиточного минимума", "З/п больше, чем у наименьших х% от з/п больше прожиточного минимума", "З/п больше, чем у наименьших х% от з/п больше прожиточного минимума", "З/п больше, чем у наименьших х% от з/п больше прожиточного минимума")
+
+
+m%>% 
+  gt(
+    
+    rowname_col = "Names",
+    groupname_col = "group"
+  )%>%
+  cols_label(
+    X1 = "Средняя з/п в контроле",
+  )%>%
+  cols_label(
+    X2 = "Эффект брака",
+  )%>%
+  cols_label(
+    X3 = "t-value"
+  )%>%
+  cols_label(
+    X4 = "Наблюдений в treatment"
+  )%>% gt::gtsave(filename = "wrobust_mar_lmoney.html")
+
+####2004-2021 эффект развода без детей####
+
+data_all <- bind_rows(ndata4, ndata5, ndata6, ndata7, ndata8, ndata9,ndata10, ndata11, ndata12, ndata13, ndata14, ndata15, ndata16, ndata17, ndata18, ndata19, ndata20, ndata21)
+
+data_cpi <- read_excel("C:/Users/dirub/Downloads/defl.xlsx", sheet="cpi2")
+data_cpi <- gather(data_cpi,"key", "value", -region)
+names(data_cpi) <- c("region", "year", "cpi")
+data_cpi$year <- as.numeric(data_cpi$year)
+data_all <- left_join(data_all, data_cpi, by=c("region","year"))
+
+data_lmin <- read_excel("C:/Users/dirub/Downloads/defl.xlsx", sheet="lmin")
+data_all <- left_join(data_all, data_lmin, by='region')
+
+data_all$working <- ifelse (as.numeric(data_all$yj1)==1|as.numeric(data_all$yj1)==3,1, ifelse (as.numeric(data_all$yj1)==2|as.numeric(data_all$yj1)==4|as.numeric(data_all$yj1)==5, 0,data_all$yj1))
+data_all$exp <- as.numeric(data_all$yj161.3y)
+data_all$male <- ifelse(data_all$yh5==1,1,0)
+data_all1 <- as.data.frame(class.ind(data_all$status))
+
+names(data_all1) <- c('oc', 'city', 'pgt', 'rural')
+data_all <- cbind(data_all,data_all1)
+educ <- ifelse(data_all$y_diplom<4, 1, ifelse(data_all$y_diplom==5|data_all$y_diplom==4, 2,ifelse(data_all$y_diplom==6, 3,data_all$y_diplom)))
+data_all2 <-  as.data.frame(class.ind(educ))
+names(data_all2) <- c('educ1', 'educ2', 'educ3', 'n1','n2', 'n3')
+data_all <- cbind(data_all,data_all2)
+data_all$hours <- ifelse(data_all$working==1, data_all$yj6.2, 0)
+data_all$money <- ifelse(data_all$working==1,data_all$yj13.2 , 0 )
+data_all$money1 <- data_all$money*data_all$cpi*data_all$lmin_def
+
+data_all3 <-  as.data.frame(class.ind(data_all$y_marst))
+names(data_all3) <- c('single', 'married', 'living', 'divorced', 'widowed', 'separated', 'none1', 'none2', 'none3')
+data_all <- cbind(data_all,data_all3)
+data_all <- subset(data_all,none1==0&none2==0&none3==0&n1==0&n2==0&n3==0)
+
+data_all <- select(data_all, -none1, -none2, -none3, -n1, -n2, -n3)
+
+# data_all1 <- pdata.frame(data_all,
+#                          index = c("idind", "year"),
+#                          row.names = TRUE)
+# data_all1$lmarried <- stats::lag(data_all1$married, 1)
+# 
+# 
+# data_all11 <- data_all1[ ! (is.na(data_all1$yj161.3y  )), ]
+# data_all1 <- data_all1[ ! (is.na(data_all1$yj1  )), ] 
+# data_all1 <- data_all1[ ! (is.na(data_all1$y_marst  )), ]
+# data_all1 <- subset(data_all1,hours<80 & yj1<99999997 & yj161.3y<100 & yh5<99999997 &y_diplom<99999997 & status<99999997 & money1<99999997& y_marst<99999997&y_age<60 &y_age>15)
+# data_all1 <- data_all1[,-c(2:9)]
+# data_all1 <- select(data_all1, -idind, -money, -cpi, -lmin_def) 
+# 
+# 
+# data_all1 <- subset(data_all1, divorced==1|married==1)
+# data_all1 <- subset(data_all1, lmarried==1)
+# 
+# data_all1 <- select(data_all1,-single, -separated, -married, -lmarried, -widowed, -living)
+# # data_all1 <- select(data_all1, -year)
+# data_all1 <- select(data_all1, -region) #, -year
+# 
+# 
+# #для мужчин
+# data_all_male <- subset(data_all1, male==1)
+# data_all_male <- select(data_all_male, -male)
+# 
+# hist(data_all_male$money1)
+# # модель
+# data_all_male <- subset(data_all_male, money1<160000&money1>0)
+# mod <- matchit(divorced ~ . - money1, data_all_male ,
+#                distance = "glm", replace = FALSE, ratio=8)
+# summary(mod)
+# m_data <- match.data(mod)
+# m_ate <- lm(money1 ~ divorced, data = m_data, weights = m_data$weights)
+# summary(m_ate)
+# 
+# plot(summary(mod))
+# 
+# table1 <- m_data %>% select(subclass, money1, divorced)
+# tab_m <- filter(table1,divorced==1) %>% select(-divorced)
+# tab_s <- filter(table1, divorced==0)%>% select(-divorced)
+# table3 <- left_join(tab_m, tab_s, by="subclass") %>% select (-subclass)
+# 
+# 
+# par(mfrow=c(2,1))
+# plot(density(table3$money1.x))
+# plot(density(table3$money1.y))
+# №№№№№№№№№№№№№№№№№№№№№№№№№№№№№№№№№№
+#контроль на прошлую зп
+datak_all1 <- pdata.frame(data_all,
+                          index = c("idind", "year"),
+                          row.names = TRUE)
+datak_all1$lmarried <- stats::lag(datak_all1$married, 1)
+datak_all1$lmoney <- stats::lag(datak_all1$money1, 1)
+
+
+datak_all1 <- datak_all1[ ! (is.na(datak_all1$yj161.3y  )), ]
+datak_all1 <- datak_all1[ ! (is.na(datak_all1$yj1  )), ] 
+datak_all1 <- datak_all1[ ! (is.na(datak_all1$y_marst  )), ]
+datak_all1 <- subset(datak_all1,hours<80 & yj1<99999997 & yj161.3y<100 & yh5<99999997 &y_diplom<99999997 & status<99999997 & money1<99999997& y_marst<99999997&y_age<60 &y_age>15)
+datak_all1 <- datak_all1[,-c(2:9)]
+datak_all1 <- select(datak_all1, -idind, -money, -cpi, -lmin_def) 
+
+
+datak_all1 <- subset(datak_all1, divorced==1|married==1)
+datak_all1 <- subset(datak_all1, lmarried==1)
+datak_all1 <- datak_all1[ ! (is.na(datak_all1$lmoney  )), ] 
+
+datak_all1 <- select(datak_all1,-single, -separated, -married, -lmarried, -widowed, -living)
+# datak_all1 <- select(datak_all1, -year)
+datak_all1 <- select(datak_all1, -region) #, -year
+datak_all1 <- subset(datak_all1, lmoney<999999)
+
+datak_all1 <- subset(datak_all1,hours<80)
+datak_all1 <- subset(datak_all1,money1<160000  &lmoney<160000)
+# datak_all1 <- select(datak_all1,  -year )
+datak_all1$beginwork <- datak_all1$y_age-datak_all1$exp
+subset(datak_all1,beginwork>15)
+datak_all1 <- select(datak_all1,-beginwork)
+datak_all1 <- subset(datak_all1, money1>0&lmoney>0)
+
+
+datak_all_female <- subset(datak_all1, male==0)
+datak_all_female <- select(datak_all_female, -male)
+
+
+# модель
+mod <- matchit(divorced ~ . - money1, datak_all_female ,exact="year",
+               distance = "glm", replace = FALSE, ratio=5)
+summary(mod)
+m_data <- match.data(mod)
+m_ate <- lm(money1 ~ divorced, data = m_data, weights = m_data$weights)
+summary(m_ate)
+stargazer(m_ate, type="text", out="wdivorce_nokids.html")
+
+plot(summary(mod))
+
+# устойчивость
+m_ate <- summary(m_ate)[5]%>% as.data.frame()
+
+m <- matrix(ncol = 4, nrow = 7)
+m[1,1] <- round(m_ate$coefficients.Estimate[1], 2)
+m[1,2] <- round(m_ate$coefficients.Estimate[2], 2)
+m[1, 3] <-round( m_ate$coefficients.t.value[2], 2)
+m[1, 4] <- as.data.frame(summary(m_out)[2])$nn.Treated[4]
+
+
+m_min_data <- subset(datak_all_female, money1>13793)
+mod_min <- matchit(divorced ~ .-money1, data = m_min_data, exact = "year",
+                   method = "nearest",
+                   distance = "glm", ratio=5, replace = FALSE)
+summary(mod_min)
+match_min_data <- match.data(mod_min)
+m_min <- lm(money1 ~ divorced, data = match_min_data, weights = match_min_data$weights)
+m_min<- summary(m_min)[5]%>% as.data.frame()
+m[2,1] <- round(m_min$coefficients.Estimate[1], 2)
+m[2,2] <- round(m_min$coefficients.Estimate[2], 2)
+m[2, 3] <- round(m_min$coefficients.t.value[2], 2)
+m[2, 4] <- as.data.frame(summary(mod_min)[2])$nn.Treated[4]
+
+
+m_10_data <- subset(datak_all_female, money1>(quantile(m_min_data$money1, 0.1)))
+mod_10 <- matchit(divorced ~ .-money1, data = m_10_data, exact = "year",
+                  method = "nearest",
+                  distance = "glm", ratio=5, replace = FALSE)
+summary(mod_10)
+match_10_data <- match.data(mod_10)
+m_10 <- lm(money1 ~ divorced, data = match_10_data, weights = match_10_data$weights)
+m_10<- summary(m_10)[5]%>% as.data.frame()
+m[3,1] <- round(m_10$coefficients.Estimate[1], 2)
+m[3,2] <- round(m_10$coefficients.Estimate[2], 2)
+m[3, 3] <- round(m_10$coefficients.t.value[2], 2)
+m[3, 4] <- as.data.frame(summary(mod_10)[2])$nn.Treated[4]
+
+
+m_20_data <- subset(datak_all_female, money1>(quantile(m_min_data$money1, 0.2)))
+mod_20 <- matchit(divorced ~ .-money1, data = m_20_data, exact = "year",
+                  method = "nearest",
+                  distance = "glm", ratio=5, replace = FALSE)
+summary(mod_20)
+match_20_data <- match.data(mod_20)
+m_20 <- lm(money1 ~ divorced, data = match_20_data, weights = match_20_data$weights)
+m_20<- summary(m_20)[5]%>% as.data.frame()
+m[4,1] <- round(m_20$coefficients.Estimate[1], 2)
+m[4,2] <- round(m_20$coefficients.Estimate[2], 2)
+m[4, 3] <- round(m_20$coefficients.t.value[2], 2)
+m[4, 4] <- as.data.frame(summary(mod_20)[2])$nn.Treated[4]
+
+
+m_30_data <- subset(datak_all_female, money1>(quantile(m_min_data$money1, 0.3)))
+mod_30 <- matchit(divorced ~ .-money1, data = m_30_data, exact = "year",
+                  method = "nearest",
+                  distance = "glm", ratio=5, replace = FALSE)
+summary(mod_30)
+match_30_data <- match.data(mod_30)
+m_30 <- lm(money1 ~ divorced, data = match_30_data, weights = match_30_data$weights)
+m_30<- summary(m_30)[5]%>% as.data.frame()
+m[5,1] <- round(m_30$coefficients.Estimate[1], 2)
+m[5,2] <- round(m_30$coefficients.Estimate[2], 2)
+m[5, 3] <- round(m_30$coefficients.t.value[2], 2)
+m[5, 4] <- as.data.frame(summary(mod_30)[2])$nn.Treated[4]
+
+
+m_40_data <- subset(datak_all_female, money1>(quantile(m_min_data$money1, 0.4)))
+mod_40 <- matchit(divorced ~ .-money1, data = m_40_data, exact = "year",
+                  method = "nearest",
+                  distance = "glm", ratio=5, replace = FALSE)
+summary(mod_40)
+match_40_data <- match.data(mod_40)
+m_40 <- lm(money1 ~ divorced, data = match_40_data, weights = match_40_data$weights)
+m_40<- summary(m_40)[5]%>% as.data.frame()
+m[6,1] <- round(m_40$coefficients.Estimate[1], 2)
+m[6,2] <- round(m_40$coefficients.Estimate[2], 2)
+m[6, 3] <- round(m_40$coefficients.t.value[2],2)
+m[6, 4] <- as.data.frame(summary(mod_40)[2])$nn.Treated[4]
+
+m_50_data <- subset(datak_all_female, money1>(quantile(m_min_data$money1, 0.5)))
+mod_50 <- matchit(divorced ~ .-money1, data = m_50_data, exact = "year",
+                  method = "nearest",
+                  distance = "glm", ratio=5, replace = FALSE)
+summary(mod_50)
+match_50_data <- match.data(mod_50)
+m_50 <- lm(money1 ~ divorced, data = match_50_data, weights = match_50_data$weights)
+m_50<- summary(m_50)[5]%>% as.data.frame()
+m[7,1] <- round(m_50$coefficients.Estimate[1], 2)
+m[7,2] <- round(m_50$coefficients.Estimate[2], 2)
+m[7, 3] <- round(m_50$coefficients.t.value[2],2)
+m[7, 4] <- as.data.frame(summary(mod_50)[2])$nn.Treated[4]
+
+m <-  data.frame(m)
+m$Names <- c( "З/п больше 0","З/п больше прожиточного минимума" , "Отсечка - 10%","Отсечка - 20%", "Отсечка - 30%", "Отсечка - 40%", "Отсечка - 50%")
+m$group <- c( "","" ,"З/п больше, чем у наименьших х% от з/п больше прожиточного минимума", "З/п больше, чем у наименьших х% от з/п больше прожиточного минимума", "З/п больше, чем у наименьших х% от з/п больше прожиточного минимума", "З/п больше, чем у наименьших х% от з/п больше прожиточного минимума", "З/п больше, чем у наименьших х% от з/п больше прожиточного минимума")
+
+
+m%>% 
+  gt(
+    
+    rowname_col = "Names",
+    groupname_col = "group"
+  )%>%
+  cols_label(
+    X1 = "Средняя з/п в контроле",
+  )%>%
+  cols_label(
+    X2 = "Эффект развода",
+  )%>%
+  cols_label(
+    X3 = "t-value"
+  )%>%
+  cols_label(
+    X4 = "Наблюдений в treatment"
+  )%>% gt::gtsave(filename = "wrobust_div_lmoney.html")
+
+####2004-2021 эффект развода через 2 года без детей и с детьми####
+
+data_all <- bind_rows(ddata4, ddata5, ddata6, ddata7, ddata8, ddata9, ddata10, ddata11, ddata12, ddata13, ddata14, ddata15, ddata16, ddata17, ddata18, ddata19, ddata20, ddata21)
+
+
+data_cpi <- read_excel("C:/Users/dirub/Downloads/defl.xlsx", sheet="cpi2")
+data_cpi <- gather(data_cpi,"key", "value", -region)
+names(data_cpi) <- c("region", "year", "cpi")
+data_cpi$year <- as.numeric(data_cpi$year)
+data_all <- left_join(data_all, data_cpi, by=c("region","year"))
+
+data_lmin <- read_excel("C:/Users/dirub/Downloads/defl.xlsx", sheet="lmin")
+data_all <- left_join(data_all, data_lmin, by='region')
+
+data_all <- subset(data_all, yj1==1|yj1==3|yj1==5)
+
+
+data_all$working <- ifelse (as.numeric(data_all$yj1)==1|as.numeric(data_all$yj1)==3,1, ifelse (as.numeric(data_all$yj1)==2|as.numeric(data_all$yj1)==4|as.numeric(data_all$yj1)==5, 0,data_all$yj1))
+data_all$exp <- as.numeric(data_all$yj161.3y)
+data_all$male <- ifelse(data_all$yh5==1,1,0)
+data_all1 <- as.data.frame(class.ind(data_all$status))
+
+names(data_all1) <- c('oc', 'city', 'pgt', 'rural')
+data_all <- cbind(data_all,data_all1)
+educ <- ifelse(data_all$y_diplom<4, 1, ifelse(data_all$y_diplom==5|data_all$y_diplom==4, 2,ifelse(data_all$y_diplom==6, 3,data_all$y_diplom)))
+data_all2 <-  as.data.frame(class.ind(educ))
+names(data_all2) <- c('educ1', 'educ2', 'educ3', 'n1','n2', 'n3')
+data_all <- cbind(data_all,data_all2)
+data_all$hours <- ifelse(data_all$working==1, data_all$yj6.2, 0)
+data_all$money <- ifelse(data_all$working==1,data_all$yj13.2 , 0 )
+data_all$money1 <- data_all$money*data_all$cpi*data_all$lmin_def
+
+
+data_all3 <-  as.data.frame(class.ind(data_all$y_marst))
+names(data_all3) <- c('single', 'married', 'living', 'divorced', 'widowed', 'separated', 'none1', 'none2', 'none3')
+data_all <- cbind(data_all,data_all3)
+data_all <- subset(data_all,none1==0&none2==0&none3==0&n1==0&n2==0&n3==0)
+#children
+data_all <- select(data_all, -none1, -none2, -none3, -n1, -n2, -n3)
+data_all$child <- data_all$yj72.171
+data_all$children <- data_all$yj72.172
+data_all$children18 <- data_all$yj72.173
+
+
+data_all$kids <- ifelse(data_all$child==2, 0, data_all$children)
+data_all <- subset(data_all, kids<30)
+data_all <- data_all[ ! (is.na(data_all$kids)), ]
+data_all <- data_all[ ! (is.na(data_all$child)), ]
+data_all <- select(data_all, - child, -children, -children18)
+
+
+#контроль на прошлую зп
+datak_all1 <- pdata.frame(data_all,
+                          index = c("idind", "year"),
+                          row.names = TRUE)
+datak_all1$lmarried <- stats::lag(datak_all1$married, 2)
+datak_all1$lmoney <- stats::lag(datak_all1$money1, 2)
+
+
+datak_all1 <- datak_all1[ ! (is.na(datak_all1$yj161.3y  )), ]
+datak_all1 <- datak_all1[ ! (is.na(datak_all1$yj1  )), ] 
+datak_all1 <- datak_all1[ ! (is.na(datak_all1$y_marst  )), ]
+datak_all1 <- subset(datak_all1,hours<80 & yj1<99999997 & yj161.3y<100 & yh5<99999997 &y_diplom<99999997 & status<99999997 & money1<99999997& y_marst<99999997&y_age<60 &y_age>15)
+datak_all1 <- datak_all1[,-c(2:9)]
+datak_all1 <- select(datak_all1, -idind, -money, -cpi, -lmin_def) 
+datak_all1 <- select(datak_all1, -yj72.173, -yj72.172, -yj72.171) 
+
+datak_all1 <- subset(datak_all1, divorced==1|married==1)
+datak_all1 <- subset(datak_all1, lmarried==1)
+datak_all1 <- datak_all1[ ! (is.na(datak_all1$lmoney  )), ] 
+
+datak_all1 <- select(datak_all1,-single, -separated, -married, -lmarried, -widowed, -living)
+# datak_all1 <- select(datak_all1, -year)
+datak_all1 <- select(datak_all1, -region) #, -year
+datak_all1 <- subset(datak_all1, lmoney<999999)
+
+datak_all1 <- subset(datak_all1,hours<80)
+datak_all1 <- subset(datak_all1,money1<160000  &lmoney<160000)
+# datak_all1 <- select(datak_all1,  -year )
+datak_all1$beginwork <- datak_all1$y_age-datak_all1$exp
+subset(datak_all1,beginwork>15)
+datak_all1 <- select(datak_all1,-beginwork)
+datak_all1 <- subset(datak_all1, kids<5)
+datak_all1 <- subset(datak_all1,money1>0 &lmoney>0 )
+
+datak_all_female <- subset(datak_all1, male==0)
+datak_all_female <- select(datak_all_female, -male)
+
+
+# модель
+datak_all_female <- subset(datak_all_female, lmoney>0&money1>0)
+mod <- matchit(divorced ~ . - money1, datak_all_female ,exact="year",
+               distance = "glm", replace = FALSE, ratio=5)
+summary(mod)
+m_data <- match.data(mod)
+m_ate <- lm(money1 ~ divorced, data = m_data, weights = m_data$weights)
+summary(m_ate)
+
+m_data <- cbind(m_data$y_age, m_data$exp, m_data$oc, m_data$city, m_data$pgt, m_data$rural, m_data$educ1, m_data$educ2, m_data$educ3,  m_data$hours,   m_data$divorced,  m_data$lmoney, m_data$kids)
+names(m_data) <- c("age", "exp", "oc", "city", "pgt", "rural", "educ1", "educ2", "educ3", "hours", "divorced","lmoney", "kids")
+m_data <- m_data  %>% as.data.frame()
+
+datasummary_balance(~divorced, m_data,stars = TRUE, dinm_statistic = "p.value", output = "gt") 
+
+# без детей
+datak_all_female1 <- select(datak_all_female, -kids)
+mod <- matchit(divorced ~ . - money1, datak_all_female1 ,exact="year",
+               distance = "glm", replace = FALSE, ratio=5)
+summary(mod)
+m_data <- match.data(mod)
+m_ate1 <- lm(money1 ~ divorced, data = m_data, weights = m_data$weights)
+summary(m_ate1)
+
+plot(summary(mod))
+stargazer(m_ate1,m_ate, type="text", out="wdivorce2.html")
+
+####olsFE с детьми####
+data_all <- bind_rows( ddata15,ddata16,ddata17, ddata18, ddata19, ddata20, ddata21)
+
+data_cpi <- read_excel("C:/Users/dirub/Downloads/defl.xlsx", sheet="cpi2")
+data_cpi <- gather(data_cpi,"key", "value", -region)
+names(data_cpi) <- c("region", "year", "cpi")
+data_cpi$year <- as.numeric(data_cpi$year)
+data_all <- left_join(data_all, data_cpi, by=c("region","year"))
+
+data_lmin <- read_excel("C:/Users/dirub/Downloads/defl.xlsx", sheet="lmin")
+data_all <- left_join(data_all, data_lmin, by='region')
+
+data_all <- subset(data_all, yj1==1|yj1==3|yj1==5)
+
+
+data_all$working <- ifelse (as.numeric(data_all$yj1)==1|as.numeric(data_all$yj1)==3,1, ifelse (as.numeric(data_all$yj1)==2|as.numeric(data_all$yj1)==4|as.numeric(data_all$yj1)==5, 0,data_all$yj1))
+data_all$exp <- as.numeric(data_all$yj161.3y)
+data_all$male <- ifelse(data_all$yh5==1,1,0)
+data_all1 <- as.data.frame(class.ind(data_all$status))
+
+names(data_all1) <- c('oc', 'city', 'pgt', 'rural')
+data_all <- cbind(data_all,data_all1)
+educ <- ifelse(data_all$y_diplom<4, 1, ifelse(data_all$y_diplom==5|data_all$y_diplom==4, 2,ifelse(data_all$y_diplom==6, 3,data_all$y_diplom)))
+data_all2 <-  as.data.frame(class.ind(educ))
+names(data_all2) <- c('educ1', 'educ2', 'educ3', 'n1','n2', 'n3')
+data_all <- cbind(data_all,data_all2)
+data_all$hours <- ifelse(data_all$working==1, data_all$yj6.2, 0)
+data_all$money <- ifelse(data_all$working==1,data_all$yj13.2 , 0 )
+data_all$money1 <- data_all$money*data_all$cpi*data_all$lmin_def
+
+
+data_all3 <-  as.data.frame(class.ind(data_all$y_marst))
+names(data_all3) <- c('single', 'married', 'living', 'divorced', 'widowed', 'separated', 'none1', 'none2', 'none3')
+data_all <- cbind(data_all,data_all3)
+data_all <- subset(data_all,none1==0&none2==0&none3==0&n1==0&n2==0&n3==0)
+
+data_all <- select(data_all, -none1, -none2, -none3, -n1, -n2, -n3)
+
+
+data_all$child <- data_all$yj72.171
+data_all$children <- data_all$yj72.172
+data_all$children18 <- data_all$yj72.173
+
+
+data_all$kids <- ifelse(data_all$child==2, 0, data_all$children)
+data_all <- subset(data_all, kids<30)
+data_all <- data_all[ ! (is.na(data_all$kids)), ]
+data_all <- data_all[ ! (is.na(data_all$child)), ]
+data_all <- select(data_all, - child, -children, -children18)
+# ограничу
+
+data_all <- data_all[ ! (is.na(data_all$yj161.3y  )), ]
+data_all <- data_all[ ! (is.na(data_all$yj1  )), ] 
+data_all <- data_all[ ! (is.na(data_all$money  )), ] 
+data_all <- data_all[ ! (is.na(data_all$y_marst  )), ]
+data_all <- subset(data_all,hours<80 & yj1<99999997 & yj161.3y<100 & yh5<99999997 &y_diplom<99999997 & status<99999997 & money<99999997 & y_marst<99999997&y_age<60 &y_age>15)
+data_all <- data_all[,-c(2:9)]
+data_all <- select(data_all,  -region, -lmin_def, -cpi, -money)
+
+data_all <- subset(data_all,hours<80)
+data_all <- subset(data_all,money1<160000  )
+# data_all <- select(data_all,  -year )
+data_all$beginwork <- data_all$y_age-data_all$exp
+subset(data_all,beginwork>15)
+data_all <- select(data_all,-beginwork)
+data_all <- subset(data_all, kids<5)
+
+data_all_female <- subset(data_all, male==0)
+data_all_female$age2 <- data_all_female$y_age*data_all_female$y_age
+data_all_female$exp2 <- data_all_female$exp*data_all_female$exp
+S1 <- data_all_female
+
+S2 <- filter(S1, money1 != 0, hours != 0)
+datafe <- dplyr::select(S2, idind)
+fe <- datafe %>% count(idind)%>% subset(n>=3)
+data_fe <- subset(S2, idind %in% fe$idind)
+data_fe <- as.data.frame(data_fe)
+data2 <- pdata.frame(data_fe, index = c("idind", "year"))
+
+
+mod2 <- plm(log(money1)~y_age+married+age2+hours+widowed+living+divorced+separated
+            + city+pgt+oc+educ1+educ3+kids,
+            data = data2, model = "within", effect = "twoways")
+summary(mod2, se = cse(mod2))
+stargazer(mod2, se=list(cse(mod2)), type="text")
+
+
+#ограничиваю только для тех, кто менял свой статус (Married)
+data_help <- data2 %>% select(idind, married)%>% group_by(idind) %>% summarize_all(function (x) {mean(x)
+})
+data_help <-subset(data_help,married>0&married<1)
+data_change <- subset(data2, idind %in% data_help$idind)
+unique(data2$idind)
+#
+
+data_help <- data2 %>% select(idind, divorced)%>% group_by(idind) %>% summarize_all(function (x) {mean(x)
+})
+data_help <-subset(data_help,divorced>0&divorced<1)
+data_change <- subset(data2, idind %in% data_help$idind)
+unique(data_change$idind)
+
+data_help <- data2 %>% select(idind, living)%>% group_by(idind) %>% summarize_all(function (x) {mean(x)
+})
+data_help <-subset(data_help, living>0& living<1)
+data_change <- subset(data2, idind %in% data_help$idind)
+unique(data_change$idind)
+#
+mod2_change <- plm(money1~y_age+married+age2+hours
+                   +y_age*married+married*age2+ city+pgt+oc+educ2+educ3,
+                   data = data_change, model = "within", effect = "twoways")
+summary(mod2_change)
+stargazer(mod2_change, se=list(cse(mod2_change)), type="text")
+#МНК
+mod1 <- lm( log(money1)~y_age+married+age2+hours+widowed+living+divorced+separated
+            + city+pgt+oc+educ1+educ3+kids,data2)
+
+stargazer(mod1, se=list(cse(mod1)), type="text")
+coef(mod1)
+vif(mod1)
+mod11 <- lm( log(money1)~y_age+married+age2+hours+widowed+living+divorced+separated
+             + city+pgt+oc+educ1+educ3+kids+married*y_age+married*age2,data2) 
+
+stargazer(mod11, se=list(cse(mod11)), type="text")
+waldtest(mod1, mod11, vcov=vcovHC(mod11, type="HC1") )
+#
+model1 <- lm( log(money1)~kids+hours+y_age+age2+married,data3)
+
+data3 <- data2
+data3$kids <- ifelse(data3$kids>=2, 2,data3$kids ) %>% as.factor()
+table(data2$kids, data2$divorced)
+table(data2$kids, data2$single)
+table(data2$kids, data2$separated) #их в принципе мало
+table(data2$kids, data2$widowed)
+table(data2$kids, data2$living)
+table(data2$kids, data2$married)
+
+
+
+stargazer(model1, se=list(cse(model1)), type="text")
+vif(model1)
+cor(data2$kids, data2$hours)
+
+
+stargazer(mod1, mod2, se = list(cse(mod1), cse(mod2)), type = "text", column.labels = c("МНК", "ФЕ"), out="wOLSandFEkids.html")
+
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+data3 <- subset(data2, money1>13793)
+mod2 <- plm(log(money1)~y_age+married+age2+hours+widowed+living+divorced+separated
+            + city+pgt+oc+educ1+educ3+kids,
+            data = data3, model = "within", effect = "twoways")
+summary(mod2, se = cse(mod2))
+stargazer(mod2, se=list(cse(mod2)), type="text")
+
+#МНК
+mod1 <- lm( log(money1)~y_age+married+age2+hours+widowed+living+divorced+separated
+            + city+pgt+oc+educ1+educ3+kids,data3)
+
+stargazer(mod1, se=list(cse(mod1)), type="text")
+
+stargazer(mod1, mod2, se = list(cse(mod1), cse(mod2)), type = "text", column.labels = c("МНК", "ФЕ"), out="wOLSandFEkids_lmin_robust.html")
+
+####инструмент####
+idata20 <- select(data20, idind,yj6.2, yj1, yj161.3y, yh5,y_diplom, status, yj13.2, y_marst , y_age, region ,yj325y,yj72.173 ,yj72.172, yj72.171 )
+idata21 <- select(data21, idind,zj6.2, zj1, zj161.3y, zh5,z_diplom, status, zj13.2, z_marst, z_age, region, zj325y, zj72.173,zj72.172, zj72.171)
+names(idata21) <- names(idata20)
+idata21$year <- rep(2021,nrow(idata21) )
+
+
+data_cpi <- read_excel("C:/Users/dirub/Downloads/defl.xlsx", sheet="cpi2")
+data_cpi <- gather(data_cpi,"key", "value", -region)
+names(data_cpi) <- c("region", "year", "cpi")
+data_cpi$year <- as.numeric(data_cpi$year)
+data_all <- left_join(idata21, data_cpi, by=c("region","year"))
+
+data_lmin <- read_excel("C:/Users/dirub/Downloads/defl.xlsx", sheet="lmin")
+data_all <- left_join(data_all, data_lmin, by='region')
+data_all <- subset(data_all, yj1==1|yj1==3|yj1==5)
+
+data_all$working <- ifelse (as.numeric(data_all$yj1)==1|as.numeric(data_all$yj1)==3,1, ifelse (as.numeric(data_all$yj1)==2|as.numeric(data_all$yj1)==4|as.numeric(data_all$yj1)==5, 0,data_all$yj1))
+data_all$exp <- as.numeric(data_all$yj161.3y)
+data_all$male <- ifelse(data_all$yh5==1,1,0)
+data_all1 <- as.data.frame(class.ind(data_all$status))
+
+names(data_all1) <- c('oc', 'city', 'pgt', 'rural')
+data_all <- cbind(data_all,data_all1)
+educ <- ifelse(data_all$y_diplom<4, 1, ifelse(data_all$y_diplom==5|data_all$y_diplom==4, 2,ifelse(data_all$y_diplom==6, 3,data_all$y_diplom)))
+data_all2 <-  as.data.frame(class.ind(educ))
+names(data_all2) <- c('educ1', 'educ2', 'educ3', 'n1')
+data_all <- cbind(data_all,data_all2)
+data_all$hours <- ifelse(data_all$working==1, data_all$yj6.2, 0)
+data_all$money <- ifelse(data_all$working==1,data_all$yj13.2 , 0 )
+data_all$money1 <- data_all$money*data_all$lmin_def
+
+
+data_all3 <-  as.data.frame(class.ind(data_all$y_marst))
+names(data_all3) <- c('single', 'married', 'living', 'divorced', 'widowed', 'separated', 'none1', 'none2', 'none3')
+data_all <- cbind(data_all,data_all3)
+data_all <- subset(data_all,none1==0&none2==0&none3==0&n1==0)
+
+data_all <- select(data_all, -none1, -none2, -none3, -n1)
+
+
+data_all <- data_all[ ! (is.na(data_all$yj161.3y  )), ]
+data_all <- data_all[ ! (is.na(data_all$yj1  )), ] 
+data_all <- data_all[ ! (is.na(data_all$money1  )), ] 
+data_all <- data_all[ ! (is.na(data_all$y_marst  )), ]
+data_all <- subset(data_all,hours<80 & yj1<99999997 & yj161.3y<100 & yh5<99999997 &y_diplom<99999997 & status<99999997 & money1<99999997 & y_marst<99999997&y_age<60 &y_age>15)
+data_all <- data_all[,-c(2:9)]
+data_all <- select(data_all, -lmin_def, -region, -idind, -money)
+
+#сколько лет живут
+data_all$ylive <- ifelse(data_all$living==1|data_all$married==1, 2021-data_all$yj325y, ifelse(data_all$living==0&data_all$married==0, 0, data_all$yj325y))
+data_all <- subset(data_all, ylive<110&ylive>-1)
+data_all <- data_all[ ! (is.na(data_all$ylive  )), ] 
+
+data_all$ylive1 <- data_all$y_age-data_all$ylive
+#
+data_female <- filter(data_all, male==0)
+data_female <- subset(data_female, money1>0)
+
+data_female$child <- data_female$yj72.171
+data_female$children <- data_female$yj72.172
+data_female$children18 <- data_female$yj72.173
+
+data_female <- subset(data_female,hours<80)
+data_female <- subset(data_female,money1<160000  )
+# data_female <- select(data_female,  -year )
+data_female$beginwork <- data_female$y_age-data_female$exp
+subset(data_female,beginwork>15)
+data_female <- select(data_female,-beginwork)
+
+data_female$kids <- ifelse(data_female$child==2, 0, data_female$children)
+data_female <- subset(data_female, kids<30)
+data_female <- data_female[ ! (is.na(data_female$kids)), ]
+data_female <- data_female[ ! (is.na(data_female$child)), ]
+data_female <- subset(data_female, kids<5)
+
+
+cor(data_female$ylive1,data_female$married)
+cor(data_female$ylive1,data_female$money1)
+#1OLS
+mo <- lm(married~ ylive1+y_age+I(y_age^2)+oc+city+pgt+educ1+educ3+hours, data_female)
+summary(mo)
+# stargazer(mo, se=list(cse(mo)), type="text", out="mo.html")
+
+data_female$z <- fitted(mo)
+#2OLS
+mod_i_nokids <- lm(log(money1)~y_age+oc+city+pgt+educ1+educ3+hours+z+I(y_age^2), data_female)
+summary(mod_i_nokids)
+
+#ИНСТРУМЕНТ С ДЕТЬМИ 
+mod_i_kids <- lm(log(money1)~y_age+I(y_age^2)+oc+city+pgt+educ1+educ3+hours+z+kids, data_female)
+vif(mod_i_kids)
+summary(mod_i_kids)
+
+iv_model <- ivreg(log(money1) ~ y_age+oc+city+pgt+educ1+educ3+hours+married+I(y_age^2)+kids |y_age+oc+city+pgt+educ2+educ3+hours+ylive1+I(y_age^2)+kids,
+                  data = data_female)
+summary(iv_model, diagnostics=TRUE)
+stargazer(iv_model, type = "text", column.labels = c("Модель 1"), df = FALSE, se = list(cse(iv_model)))
+
+stargazer(mod_i_nokids, mod_i_kids, type = "text", column.labels = c("Модель 1", "Модель2"), df = FALSE, se = list(cse(mod_i_nokids), cse(mod_i_kids)), out="winstrument_kidsandno.html")
+
+#ЖЕНЩИНЫ
+mod_3 <- feols(log(money1)~y_age+I(y_age^2)+oc+city+pgt+educ2+educ3
+               +hours+kids| married ~ ylive, data = data_female)
+summary(mod_3)
+####с кодами профессий####
+
+ddatao21 <- select(data21, idind,zj6.2, zj1, zj161.3y, zh5,z_diplom, status, zj13.2, z_marst, z_age, region,zj72.173, zj72.172,zj72.171 , z_occup08)
+ddatao21$year <- rep(2021,nrow(ddatao21) )
+
+ddatao20 <- select(data20, idind,yj6.2, yj1, yj161.3y, yh5,y_diplom, status, yj13.2, y_marst , y_age, region, yj72.173, yj72.172,yj72.171 , y_occup08)
+ddatao20$year <- rep(2020,nrow(ddatao20))
+
+ddatao19 <- select(data19, idind,xj6.2, xj1, xj161.3y, xh5,x_diplom, status, xj13.2, x_marst , x_age, region, xj72.173, xj72.172, xj72.171 , x_occup08)
+ddatao19$year <- rep(2019,nrow(ddatao19))
+
+ddatao18<- select(data18, idind,wj6.2, wj1, wj161.3y, wh5,w_diplom, status, wj13.2, w_marst , w_age, region, wj72.173, wj72.172,wj72.171, w_occup08 )
+ddatao18$year <- rep(2018,nrow(ddatao18) )
+
+ddatao17<- select(data17, idind,vj6.2, vj1, vj161.3y, vh5,v_diplom, status, vj13.2, v_marst , v_age, region, vj72.173, vj72.172,vj72.171, v_occup08 )
+ddatao17$year <- rep(2017,nrow(ddatao17) )
+
+ddatao16<- select(data16, idind,uj6.2, uj1, uj161.3y, uh5,u_diplom, status, uj13.2, u_marst, u_age, region , uj72.173, uj72.172, uj72.171, u_occup08 )
+ddatao16$year <- rep(2016,nrow(ddatao16) )
+
+ddatao15<- select(data15, idind,tj6.2, tj1, tj161.3y, th5,t_diplom, status, tj13.2, t_marst, t_age, region, tj72.173, tj72.172,tj72.171 , t_occup08 )
+ddatao15$year <- rep(2015,nrow(ddatao15) )
+
+ddatao14<- select(data14, idind,sj6.2, sj1, sj161.3y, sh5,s_diplom, status, sj13.2, s_marst, s_age, region, sj72.173, sj72.172,sj72.171, s_occup08  )
+ddatao14$year <- rep(2014,nrow(ddatao14) )
+
+ddatao13<- select(data13, idind,rj6.2, rj1, rj161.3y, rh5,r_diplom, status, rj13.2, r_marst, r_age, region, rj72.173, rj72.172, rj72.171, r_occup08 )
+ddatao13$year <- rep(2013,nrow(ddatao13) )
+
+ddatao12<- select(data12, idind,qj6.2, qj1, qj161.1y, qj161.2y, qh5,q_diplom, status, qj13.2, q_marst, q_age, region, qj72.173 , qj72.172, qj72.171 , q_occup08)
+ddatao12$stag <- ddatao12$qj161.1y+ddatao12$qj161.2y
+ddatao12 <- select(ddatao12, idind,qj6.2, qj1, stag, qh5,q_diplom, status, qj13.2, q_marst, q_age, region, qj72.173, qj72.172,qj72.171 , q_occup08)
+ddatao12$year <- rep(2012,nrow(ddatao12) )
+
+ddatao11<- select(data11, idind,pj6.2, pj1, pj161.1y , pj161.2y, ph5,p_diplom, status, pj13.2, p_marst, p_age, region, pj72.173, pj72.172,pj72.171 , p_occup08 )
+ddatao11$stag <- ddatao11$pj161.1y+ddatao11$pj161.2y
+ddatao11 <- select(ddatao11, idind,pj6.2, pj1, stag, ph5,p_diplom, status, pj13.2, p_marst, p_age, region, pj72.173, pj72.172,pj72.171, p_occup08 )
+ddatao11$year <- rep(2011,nrow(ddatao11) )
+
+ddatao10<- select(data10, idind,oj6.2 , oj1, oj161.1y, oj161.2y, oh5,o_diplom, status, oj13.2, o_marst, o_age, region, oj72.173, oj72.172,oj72.171 , o_occup08 )
+ddatao10$stag <- ddatao10$oj161.1y+ddatao10$oj161.2y
+ddatao10 <- select(ddatao10, idind,oj6.2 , oj1, stag, oh5,o_diplom, status, oj13.2, o_marst, o_age, region, oj72.173, oj72.172,oj72.171, o_occup08 )
+ddatao10$year <- rep(2010,nrow(ddatao10) )
+
+ddatao9<- select(data9, idind,nj6.2 , nj1,nj79a, nh5,n_diplom, status, nj13.2, n_marst , n_age, region, nj72.173, nj72.172,nj72.171, n_occup08 )
+ddatao9$year <- rep(2009,nrow(ddatao9) )
+
+ddatao8<- select(data8, idind,mj6.2 , mj1, mj161.1y,mj161.2y, mh5,m_diplom, status, mj13.2, m_marst, m_age, region, mj72.173, mj72.172,mj72.171 , m_occup08 )
+ddatao8$stag <- ddatao8$mj161.1y+ddatao8$mj161.2y
+ddatao8 <- select(ddatao8,idind,mj6.2 , mj1, stag, mh5,m_diplom, status, mj13.2, m_marst, m_age, region, mj72.173, mj72.172,mj72.171 , m_occup08)
+ddatao8$year <- rep(2008,nrow(ddatao8) )
+
+ddatao7<- select(data7, idind,lj6.2 , lj1, lj161.1y, lj161.2y, lh5,l_diplom, status, lj13.2, l_marst, l_age, region, lj72.173, lj72.172,lj72.171 , l_occup08 )
+ddatao7$stag <- ddatao7$lj161.1y+ddatao7$lj161.2y
+ddatao7 <- select(ddatao7,idind,lj6.2 , lj1, stag, lh5,l_diplom, status, lj13.2, l_marst, l_age, region, lj72.173 , lj72.172,lj72.171 , l_occup08) 
+ddatao7$year <- rep(2007,nrow(ddatao7) )
+
+ddatao6<- select(data6, idind,kj6.2 , kj1, kj79, kh5,k_diplom, status, kj13.2, k_marst, k_age, region, kj72.173, kj72.172,kj72.171 , k_occup08 )
+ddatao6$year <- rep(2006,nrow(ddatao6) )
+
+ddatao5<- select(data5, idind,jj6.2 , jj1, jj161.1y , jj161.2y, jh5,j_diplom, status, jj13.2, j_marst , j_age, region, jj72.173, jj72.172,jj72.171 , j_occup08)
+ddatao5$stag <- ddatao5$jj161.1y+ddatao5$jj161.2y
+ddatao5 <- select(ddatao5, idind,jj6.2 , jj1, stag, jh5,j_diplom, status, jj13.2, j_marst, j_age, region, jj72.173 , jj72.172,jj72.171 , j_occup08)
+ddatao5$year <- rep(2005,nrow(ddatao5) )
+
+ddatao4<- select(data4, idind,ij6.2 , ij1, ij161, ih5,i_diplom, status, ij13.2, i_marst, i_age, region, ij72.173 , ij72.172,ij72.171 , i_occup08 )
+ddatao4$year <- rep(2004,nrow(ddatao4) )
+
+
+
+names(ddatao21) <- names(ddatao20)
+names(ddatao19) <- names(ddatao20)
+names(ddatao18) <- names(ddatao20)
+names(ddatao17) <- names(ddatao20)
+names(ddatao16) <- names(ddatao20)
+names(ddatao15) <- names(ddatao20)
+names(ddatao14) <- names(ddatao20)
+names(ddatao13) <- names(ddatao20)
+names(ddatao12) <- names(ddatao20)
+names(ddatao11) <- names(ddatao20)
+names(ddatao10) <- names(ddatao20)
+names(ddatao9) <- names(ddatao20)
+names(ddatao8) <- names(ddatao20)
+names(ddatao7) <- names(ddatao20)
+names(ddatao6) <- names(ddatao20)
+names(ddatao5) <- names(ddatao20)
+names(ddatao4) <- names(ddatao20)
+####брак с кодами профессий, детьми####
+data_all <- bind_rows(ddatao4, ddatao5, ddatao6, ddatao7, ddatao8, ddatao9, ddatao10, ddatao11, ddatao12, ddatao13, ddatao14, ddatao15, ddatao16, ddatao17, ddatao18, ddatao19, ddatao20, ddatao21)
+
+data_cpi <- read_excel("C:/Users/dirub/Downloads/defl.xlsx", sheet="cpi2")
+data_cpi <- gather(data_cpi,"key", "value", -region)
+names(data_cpi) <- c("region", "year", "cpi")
+data_cpi$year <- as.numeric(data_cpi$year)
+data_all <- left_join(data_all, data_cpi, by=c("region","year"))
+
+data_lmin <- read_excel("C:/Users/dirub/Downloads/defl.xlsx", sheet="lmin")
+data_all <- left_join(data_all, data_lmin, by='region')
+
+data_all <- subset(data_all, yj1==1|yj1==3|yj1==5)
+
+
+data_all$working <- ifelse (as.numeric(data_all$yj1)==1|as.numeric(data_all$yj1)==3,1, ifelse (as.numeric(data_all$yj1)==2|as.numeric(data_all$yj1)==4|as.numeric(data_all$yj1)==5, 0,data_all$yj1))
+data_all$exp <- as.numeric(data_all$yj161.3y)
+data_all$male <- ifelse(data_all$yh5==1,1,0)
+data_all1 <- as.data.frame(class.ind(data_all$status))
+
+names(data_all1) <- c('oc', 'city', 'pgt', 'rural')
+data_all <- cbind(data_all,data_all1)
+educ <- ifelse(data_all$y_diplom<4, 1, ifelse(data_all$y_diplom==5|data_all$y_diplom==4, 2,ifelse(data_all$y_diplom==6, 3,data_all$y_diplom)))
+data_all2 <-  as.data.frame(class.ind(educ))
+names(data_all2) <- c('educ1', 'educ2', 'educ3', 'n1','n2', 'n3')
+data_all <- cbind(data_all,data_all2)
+data_all$hours <- ifelse(data_all$working==1, data_all$yj6.2, 0)
+data_all$money <- ifelse(data_all$working==1,data_all$yj13.2 , 0 )
+data_all$money1 <- data_all$money*data_all$cpi*data_all$lmin_def
+
+
+data_all3 <-  as.data.frame(class.ind(data_all$y_marst))
+names(data_all3) <- c('single', 'married', 'living', 'divorced', 'widowed', 'separated', 'none1', 'none2', 'none3')
+data_all <- cbind(data_all,data_all3)
+data_all <- subset(data_all,none1==0&none2==0&none3==0&n1==0&n2==0&n3==0)
+#children
+data_all <- select(data_all, -none1, -none2, -none3, -n1, -n2, -n3)
+data_all$child <- data_all$yj72.171
+data_all$children <- data_all$yj72.172
+data_all$children18 <- data_all$yj72.173
+
+
+data_all$kids <- ifelse(data_all$child==2, 0, data_all$children)
+data_all <- subset(data_all, kids<30)
+data_all <- data_all[ ! (is.na(data_all$kids)), ]
+data_all <- data_all[ ! (is.na(data_all$child)), ]
+data_all <- select(data_all, - child, -children, -children18)
+
+
+data_all1 <- pdata.frame(data_all,
+                         index = c("idind", "year"),
+                         row.names = TRUE)
+data_all1$lsingle <- stats::lag(data_all1$single)
+data_all1$loccup <- stats::lag(data_all1$y_occup08)
+data_all1$lmoney <- stats::lag(data_all1$money1)
+
+
+data_all1 <- data_all1[ ! (is.na(data_all1$yj161.3y  )), ]
+data_all1 <- data_all1[ ! (is.na(data_all1$yj1  )), ] 
+data_all1 <- data_all1[ ! (is.na(data_all1$money1  )), ]
+data_all1 <- data_all1[ ! (is.na(data_all1$y_marst  )), ]
+data_all1 <- subset(data_all1,hours<80 & yj1<99999997 & yj161.3y<100 & yh5<99999997 &y_diplom<99999997 & status<99999997 & money1<99999997 & y_marst<99999997&y_age<60 &y_age>15 &loccup<10)
+data_all1 <- data_all1[,-c(2:9, 11:15)]
+
+
+data_all1 <- data_all1[ ! (is.na(data_all1$loccup  )), ]
+data_all4 <-  as.data.frame(class.ind(data_all1$loccup))
+data_all1 <- cbind(data_all1,data_all4)
+
+
+data_all1 <- select(data_all1, -cpi, -lmin_def,  -idind, -money)
+str(data_all1)
+
+data_all1 <- subset(data_all1, as.numeric(married)==1|as.numeric(single)==1)
+data_all1 <- subset(data_all1, lsingle==1)
+data_all1 <- select(data_all1, - single, -lsingle, -widowed, -separated, -living, -divorced)
+# data_all1 <- select(data_all1, -year)
+data_all1 <- select(data_all1, -loccup)
+data_all1 <- data_all1[ ! (is.na(data_all1$lmoney )), ]
+
+data_all1 <- subset(data_all1,hours<80)
+data_all1 <- subset(data_all1,money1<160000&exp<41&lmoney<160000 )
+data_all1$beginwork <- data_all1$y_age-data_all1$exp
+data_all1 <- subset(data_all1,as.numeric(beginwork)>15)
+data_all1 <- select(data_all1,-beginwork)
+# data_all1 <- subset(data_all1, kids<5)
+
+#модель
+data_all_male <- subset(data_all1, male==1)
+data_all_male <- select(data_all_male, -male)
+
+data_all_male <- subset(data_all_male, lmoney>0&money1>0)
+
+names(data_all_male)[16:25] <- LETTERS[1:10]
+data_all_male <- select(data_all_male, -A,-B, -E, -G, -J,
+                        -C, -D, -F, -H, -I)
+data_all_male <- select(data_all_male, - kids)
+
+
+# Теперь модель
+m_out <- matchit(married ~ .-money1, data = data_all_male,
+                 method = "nearest",
+                 distance = "glm", ratio = 7, replace = FALSE)
+summary(m_out)
+m_data <- match.data(m_out)
+m_ate <- lm(money1 ~ married, data = m_data, weights = m_data$weights)
+summary(m_ate)
+plot(summary(m_out))
+
+dattt <- subset(m_data, married==1)
+names(dattt)
+table(dattt$K)
+
+k <- m_data %>% as.data.frame() %>% select(-subclass)
+mb <- MatchBalance(married~.,data=k)
+
+m_data <- cbind(m_data$y_age, m_data$exp, m_data$oc, m_data$city, m_data$pgt, m_data$rural, m_data$educ1, m_data$educ2, m_data$educ3,  m_data$hours,   m_data$married,  m_data$lmoney)
+names(m_data) <- c("age", "exp", "oc", "city", "pgt", "rural", "educ1", "educ2", "educ3", "hours", "married", "lmoney")
+m_data <- m_data  %>% as.data.frame()
+datasummary_balance(~married, m_data,stars = TRUE, dinm_statistic = "p.value", output = "gt") 
+
+###
+male1 <- select(data_all_male, -"1", -"2", -"3", -"4", -"5", -"6", -"7", -"9", -"0")
+m_out <- matchit(married ~ .-money1, data = male1,
+                 method = "nearest",
+                 distance = "mahalanobis", ratio = 4, replace = FALSE)
+summary(m_out)
+m_data <- match.data(m_out)
+m_ate <- lm(money1 ~ married, data = m_data, weights = m_data$weights)
+summary(m_ate)
+plot(summary(m_out))
+
+####графики####
+r30iall_53 <- read_sav("C:/Users/dirub/Downloads/r30iall_53.sav")
+data21 <- r30iall_53
+#распределение брачных статусов в 2021 году
+data_graph1 <- select(data21, z_marst, zh5)
+data_graph1 <- subset(data_graph1, z_marst<7)
+data_graph1$marstatus <- as.numeric(data_graph1$z_marst)е
+data_graph1$z_marst <- ifelse(data_graph1$z_marst==1, "никогда не были в браке",ifelse(data_graph1$z_marst==2, "в браке", ifelse(data_graph1$z_marst==3, "сожительствуют", ifelse(data_graph1$z_marst==4, "разведены", ifelse(data_graph1$z_marst==5, "овдовели", "в браке, но живут отдельно")))) )
+data_graph1$male <- ifelse(data_graph1$zh5==1, 1, 0)
+# qplot(factor(data_graph1$z_marst))+geom_density()
+
+ggplot(data_graph1, aes(x = z_marst)) + 
+  geom_bar(aes(y = (..count..)/sum(..count..))) + 
+  ylab("Density")
+#сколько мужчин и женщин в каждой групппе семейного статуса
+data_graph1$male <- ifelse(data_graph1$male==1, "Мужчины", "Женщины")
+ggplot(data_graph1, aes(x=z_marst, fill= as.factor(male)), colour=male) +
+  geom_bar(position="dodge")+ylab("Количество респондентов")+xlab("Семейное положение")+
+  theme(legend.title = element_blank())
+
+# ggplot(data_graph1, aes(x = z_marst, fill= as.factor(male))) + 
+#   geom_bar(aes(y = (..count..)/sum(..count..))) + 
+#   ylab("Доля респондентов")+xlab("Семейное положение")
+# 
+# data_graph1_m <- data_graph1 %>% subset(male==1) %>% select(marstatus, male ) 
+# data_graph1_m <-(count(data_graph1_m$marstatus))/sum(with(data_graph1_m$male==1)))
+# data_graph1_w <- data_graph1 %>% subset(male==0) %>% select(z_marst) %>% (..count..)/sum(..count..))
+# ggplot(data_graph1_m, aes(x = z_marst)) + 
+#   geom_bar(aes(y = (..count..)/sum(..count..)))
+####свадьбы и разводы за 2000-2022 год
+
+data_graph2 <- read_excel("C:/Users/dirub/Desktop/diplom/mardivorce.xls")
+data_graph2 <- subset(data_graph2, data_graph2$year > 1999)      
+ggplot(data = data_graph2, aes(x = year, y = rate, group = 1)) +
+  geom_line(aes(y = marriage, color = "Браков")) +
+  geom_line(aes(y = divorces, color = "Разводов")) +
+  scale_y_continuous(name = "Количество на 1000 человек населения", limits = c(3, 10), breaks = c(seq(3, 10, 1)))+
+  scale_x_continuous(name = "Год", limits = c(2000, 2020), breaks = c(seq(2000, 2020, 2)))
+
+#### график изменения статусов за 4 года
+
+
+# data_graph3 <- select(data_graph3, z_marst, y_marst, x_marst, w_marst)
+# data_graph3$MAR_2021 <- data_graph3$z_marst 
+# data_graph3$MAR_2020 <- data_graph3$y_marst 
+# data_graph3$MAR_2019 <- data_graph3$x_marst 
+# data_graph3$MAR_2018 <- data_graph3$w_marst 
+mar12 <- select(ndata12, idind, y_marst)
+mar12 <- select(ndata12, idind, y_marst)
+mar13 <- select(ndata13, idind, y_marst)
+mar14 <- select(ndata14, idind, y_marst)
+mar15 <- select(ndata15, idind, y_marst)
+mar16 <- select(ndata16, idind, y_marst)
+mar17 <- select(ndata17, idind, y_marst)
+mar18 <- select(ndata18, idind, y_marst)
+mar19 <- select(ndata19, idind, y_marst)
+mar20 <- select(ndata20, idind, y_marst)
+mar21 <- select(ndata21, idind, y_marst)
+
+mar11$mar11 <- mar11$y_marst
+mar12$mar12 <- mar12$y_marst
+mar13$mar13 <- mar13$y_marst
+mar14$mar14 <- mar14$y_marst
+mar15$mar15 <- mar15$y_marst
+mar16$mar16 <- mar16$y_marst
+mar17$mar17 <- mar17$y_marst
+mar18$mar18 <- mar18$y_marst
+mar19$mar19 <- mar19$y_marst
+mar20$mar20 <- mar20$y_marst
+mar21$mar21 <- mar21$y_marst
+
+mar11 <- subset(mar11,mar11<7 )
+mar12 <- subset(mar12,mar12<7 )
+mar13 <- subset(mar13,mar13<7 )
+mar14 <- subset(mar14,mar14<7 )
+mar15 <- subset(mar15,mar15<7 )
+mar16 <- subset(mar16,mar16<7 )
+mar17 <- subset(mar17,mar17<7 )
+mar18 <- subset(mar18,mar18<7 )
+mar19 <- subset(mar19,mar19<7 )
+mar20 <- subset(mar20,mar20<7 )
+mar21 <- subset(mar21,mar21<7 )
+
+fdata_graph3 <- merge(mar11, mar12, by= "idind") 
+fdata_graph3 <- merge(fdata_graph3, mar13, by= "idind")
+fdata_graph3 <- merge(fdata_graph3, mar14, by= "idind") 
+fdata_graph3 <- merge(fdata_graph3, mar15, by= "idind")
+fdata_graph3 <- merge(fdata_graph3, mar16, by= "idind") 
+fdata_graph3 <- merge(fdata_graph3, mar17, by= "idind")
+fdata_graph3 <- merge(fdata_graph3, mar18, by= "idind") 
+fdata_graph3 <- merge(fdata_graph3, mar19, by= "idind")
+fdata_graph3 <- merge(fdata_graph3, mar20, by= "idind") 
+fdata_graph3 <- merge(fdata_graph3, mar21, by= "idind")
+# 
+# data_graph3 <- data_graph3 %>% pivot_longer(
+#   cols = MAR_2018:MAR_2021,
+#   names_to = c(".value", "Year"),
+#   names_pattern = "(.*)_(..)"
+# )
+# View(data_graph3)
+fordata_graph3 <- (select(fdata_graph3, mar11, mar12, mar13, mar14, mar15, mar16, mar17, mar18, mar19, mar20, mar21))
+year <- (c(2012:2021))
+unique(fordata_graph3$mar21)
+
+# single <- c(sum(as.numeric(fdata_graph3$w_marst)==1),sum(as.numeric(fdata_graph3$x_marst)==1), sum(as.numeric(fdata_graph3$y_marst)==1), sum(as.numeric(fdata_graph3$z_marst)==1))
+# married <- c(sum(as.numeric(fdata_graph3$w_marst)==2),sum(as.numeric(fdata_graph3$x_marst)==2), sum(as.numeric(fdata_graph3$y_marst)==2), sum(as.numeric(fdata_graph3$z_marst)==2))
+# living <- c(sum(as.numeric(fdata_graph3$w_marst)==3),sum(as.numeric(fdata_graph3$x_marst)==3), sum(as.numeric(fdata_graph3$y_marst)==3), sum(as.numeric(fdata_graph3$z_marst)==3))
+# divorced <- c(sum(as.numeric(fdata_graph3$w_marst)==4),sum(as.numeric(fdata_graph3$x_marst)==4), sum(as.numeric(fdata_graph3$y_marst)==4), sum(as.numeric(fdata_graph3$z_marst)==4))
+# widowed <- c(sum(as.numeric(fdata_graph3$w_marst)==5),sum(as.numeric(fdata_graph3$x_marst)==5), sum(as.numeric(fdata_graph3$y_marst)==5), sum(as.numeric(fdata_graph3$z_marst)==5))
+# separated <- c(sum(as.numeric(fdata_graph3$w_marst)==6),sum(as.numeric(fdata_graph3$x_marst)==6), sum(as.numeric(fdata_graph3$y_marst)==6), sum(as.numeric(fdata_graph3$z_marst)==6))
+# data_graph4 <- cbind(year, single, living, divorced, widowed, separated)
+# 
+# count(fdata_graph3$z_marst==1)
+# View(fdata_graph3)
+# sum(with(fdata_graph3$z_marst==1))
+
+fordata_graph3 <- apply(fordata_graph3, 2, table)
+fordata_graph3 <- as.data.frame( fordata_graph3)
+
+data_graph3 <- rbind( fordata_graph3$mar11, fordata_graph3$mar12, fordata_graph3$mar13, fordata_graph3$mar14, fordata_graph3$mar15, fordata_graph3$mar16,fordata_graph3$mar17, fordata_graph3$mar18, fordata_graph3$mar19, fordata_graph3$mar20, fordata_graph3$mar21)
+data_graph3 <- cbind(year, data_graph3)
+names(data_graph3) <- c('year', 'single', 'married','living', 'divorced', 'widowed', 'separated' )
+data_graph3 <- as.data.frame(data_graph3)
+
+ggplot(data = data_graph3, aes(x = year, y = number, group = 1)) +
+  geom_line(aes(y = single, color = "Никогда не были в браке")) +
+  geom_line(aes(y = living, color = "Сожительствуют")) +
+  geom_line(aes(y = divorced, color = "Разведены"))+
+  geom_line(aes(y = widowed, color = "Овдовели")) +
+  scale_y_continuous(name = "Количество людей в семейном статусе", limits = c(400, 900)) +
+  labs(color = "")+
+  scale_x_continuous(name = "Год", limits = c(2011, 2021), breaks = c(seq(2011, 2021, 2)))
+
+ggplot(data = data_graph3, aes(x = year, y = number, group = 1)) +
+  geom_line(aes(y = married, color = "В браке")) +
+  scale_y_continuous(name = "Количество людей в семейном статусе", limits = c(2900, 3100)) +
+  labs(color = "")+
+  scale_x_continuous(name = "Год", limits = c(2011, 2021), breaks = c(seq(2011, 2021, 2)))
+
+
+data_graph4 <- fordata_graph3   
+data_graph4$change12  <- (data_graph4$mar12- data_graph4$mar11)/data_graph4$mar11*100
+data_graph4$change13  <- (data_graph4$mar13- data_graph4$mar12)/data_graph4$mar12*100
+data_graph4$change14  <- (data_graph4$mar14- data_graph4$mar13)/data_graph4$mar13*100
+data_graph4$change15  <- (data_graph4$mar15- data_graph4$mar14)/data_graph4$mar14*100
+data_graph4$change16  <- (data_graph4$mar16- data_graph4$mar15)/data_graph4$mar15*100
+data_graph4$change17 <- (data_graph4$mar17- data_graph4$mar16)/data_graph4$mar16*100
+data_graph4$change18  <- (data_graph4$mar18- data_graph4$mar17)/data_graph4$mar17*100
+data_graph4$change19  <- (data_graph4$mar19- data_graph4$mar18)/data_graph4$mar18*100
+data_graph4$change20  <- (data_graph4$mar20- data_graph4$mar19)/data_graph4$mar19*100
+data_graph4$change21  <- (data_graph4$mar21- data_graph4$mar20)/data_graph4$mar20*100
+
+data_graph4 <- rbind(  data_graph4$change12, data_graph4$change13, data_graph4$change14, data_graph4$change15, data_graph4$change16,data_graph4$change17, data_graph4$change18, data_graph4$change19, data_graph4$change20, data_graph4$change21)
+data_graph4 <- cbind(year, data_graph4)
+data_graph4 <- as.data.frame(data_graph4)
+names(data_graph4) <- c('year', 'single', 'married','living', 'divorced', 'widowed', 'separated' )
+
+
+ggplot(data = data_graph4, aes(x = year, y = number, group = 1)) +
+  geom_line(aes(y = single, color = "Никогда не были в браке")) +
+  geom_line(aes(y = living, color = "Сожительствуют")) +
+  geom_line(aes(y = divorced, color = "Разведены"))+
+  geom_line(aes(y = widowed, color = "Овдовели")) +
+  geom_line(aes(y = married, color = "В браке")) +
+  scale_y_continuous(name = "Темпы прироста, % к предыдущему году", limits = c(-10, 10)) +
+  labs(color = "")+
+  scale_x_continuous(name = "Год", limits = c(2012, 2021), breaks = c(seq(2012, 2021, 2)))
+
